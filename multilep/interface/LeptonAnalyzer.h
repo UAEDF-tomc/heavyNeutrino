@@ -19,7 +19,7 @@
 //include c++ library classes
 #include<memory>                                                                                    //for using std::shared_ptr
 
-
+#include "JetMETCorrections/JetCorrector/interface/JetCorrector.h"
 /*
  * Functions for electron identification
  */
@@ -77,7 +77,7 @@ class LeptonAnalyzer {
     void fillLeptonImpactParameters(const pat::Tau&, const reco::Vertex&);
     double tau_dz(const pat::Tau&, const reco::Vertex::Point&);  
     bool eleMuOverlap(const pat::Electron& ele);
-    void fillLeptonJetVariables(const reco::Candidate&, edm::Handle<std::vector<pat::Jet>>&, const reco::Vertex&);
+    void fillLeptonJetVariables(const reco::Candidate&, edm::Handle<std::vector<pat::Jet>>&, const reco::Vertex&, const reco::JetCorrector&);
 
     // In leptonAnalyzerIso,cc
     double getRelIso03(const pat::Muon&, const double);

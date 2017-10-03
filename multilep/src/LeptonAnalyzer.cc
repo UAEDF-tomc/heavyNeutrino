@@ -2,6 +2,9 @@
 
 #include "FWCore/ParameterSet/interface/FileInPath.h"
 #include "TLorentzVector.h"
+
+//Temporary for JEC test
+#include "JetMETCorrections/JetCorrector/interface/JetCorrector.h"
 /*
  * Calculating all lepton-related variables
  * I know, code is still messy here, but it will improve
@@ -70,6 +73,9 @@ bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& prima
   edm::Handle<double> rho;                                         iEvent.getByToken(multilepAnalyzer->rhoTokenAll,                       rho);
   edm::Handle<std::vector<pat::Jet>> jets;                         iEvent.getByToken(multilepAnalyzer->jetToken,                          jets);
 
+  //Temporary for JEC test, remove later
+  edm::Handle<reco::JetCorrector> jetCorrector;                    iEvent.getByToken(multilepAnalyzer->jetCorrectorToken,                 jetCorrector);
+
   _nL     = 0;
   _nLight = 0;
   _nMu    = 0;
@@ -89,7 +95,7 @@ bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& prima
     if(fabs(_dz[_nL]) > 0.1) continue;
     fillLeptonKinVars(mu);
     fillLeptonGenVars(mu.genParticle());
-    fillLeptonJetVariables(mu, jets, primaryVertex);
+    fillLeptonJetVariables(mu, jets, primaryVertex, *jetCorrector);
     _lFlavor[_nL] = 1;
     //Isolation variables
     _relIso[_nL]  = getRelIso03(mu, *rho);
@@ -124,7 +130,7 @@ bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& prima
     if(fabs(_dz[_nL]) > 0.1) continue;
     fillLeptonKinVars(*ele);
     fillLeptonGenVars(ele->genParticle());
-    fillLeptonJetVariables(*ele, jets, primaryVertex);
+    fillLeptonJetVariables(*ele, jets, primaryVertex, *jetCorrector);
     _lFlavor[_nL]      = 0;
     _lEtaSC[_nL]       = ele->superCluster()->eta();
     _relIso[_nL]       = getRelIso03(*ele, *rho);
@@ -235,7 +241,7 @@ bool LeptonAnalyzer::eleMuOverlap(const pat::Electron& ele){
 }
 
 
-void LeptonAnalyzer::fillLeptonJetVariables(const reco::Candidate& lepton, edm::Handle<std::vector<pat::Jet>>& jets, const reco::Vertex& vertex){
+void LeptonAnalyzer::fillLeptonJetVariables(const reco::Candidate& lepton, edm::Handle<std::vector<pat::Jet>>& jets, const reco::Vertex& vertex, const reco::JetCorrector& jetCorrector){
   //Make skimmed "close jet" collection
   std::vector<pat::Jet> selectedJetsAll;
   for(auto jet = jets->cbegin(); jet != jets->cend(); ++jet){
@@ -257,6 +263,8 @@ void LeptonAnalyzer::fillLeptonJetVariables(const reco::Candidate& lepton, edm::
    } else {
        //WARNING, these jets currently remain uncorrected!!
        // auto  l1Jet       = jet->correctedP4("L1FastJet"); // can't get this to work, annoying, please correct when you can solve it
+       double jec        = jetCorrector.correction(jet);
+       std::cout << "jet.pt() = " << jet.pt() <<"\t" << jet.correctedP4("Uncorrected").pt()*jec << std::endl;
        auto  l1Jet       = jet.p4();
        float JEC         = jet.p4().E()/l1Jet.E();
        auto  l           = lepton.p4();

@@ -37,6 +37,9 @@ multilep::multilep(const edm::ParameterSet& iConfig):
     prescalesToken(                   consumes<pat::PackedTriggerPrescales>(      iConfig.getParameter<edm::InputTag>("prescales"))),
     badPFMuonFilterToken(             consumes<bool>(                             iConfig.getParameter<edm::InputTag>("badPFMuonFilter"))),
     badChCandFilterToken(             consumes<bool>(                             iConfig.getParameter<edm::InputTag>("badChargedCandFilter"))),
+    //Temporary for JEC test, remove later
+    jetCorrectorToken(                consumes<reco::JetCorrector>(               iConfig.getParameter<edm::InputTag>("jetCorrection"))),
+    //////////////////////////////////////
     skim(                                                                         iConfig.getUntrackedParameter<std::string>("skim")),
     isData(                                                                       iConfig.getUntrackedParameter<bool>("isData"))
 {

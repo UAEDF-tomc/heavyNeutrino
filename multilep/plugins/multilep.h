@@ -36,7 +36,8 @@
 #include "heavyNeutrino/multilep/interface/LheAnalyzer.h"
 
 
-
+//Temporary for JEC test, remove later
+#include "JetMETCorrections/JetCorrector/interface/JetCorrector.h"
 
 //
 // class declaration
@@ -93,6 +94,9 @@ class multilep : public edm::one::EDAnalyzer<edm::one::SharedResources> {
     edm::EDGetTokenT<pat::PackedTriggerPrescales>       prescalesToken;
     edm::EDGetTokenT<bool>                              badPFMuonFilterToken;                        //MET filter not stored in miniAOD
     edm::EDGetTokenT<bool>                              badChCandFilterToken;                        //MET filter not stored in miniAOD
+    //Temporary for JEC test, remove later
+    edm::EDGetTokenT<reco::JetCorrector>                jetCorrectorToken;
+    /////////////////////////////////////
     std::string                                         skim;
     bool                                                isData;
 
