@@ -57,6 +57,8 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
       outputTree->Branch("_lIsPrompt",                &_lIsPrompt,                    "_lIsPrompt[_nL]/D");
       outputTree->Branch("_lMatchPdgId",              &_lMatchPdgId,                  "_lMatchPdgId[_nL]/D");
   }
+
+  fMetCorrector = new OnTheFlyCorrections("../data/JECfiles/", "Summer16_23Sep2016", false);
 }
 
 bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& primaryVertex){
@@ -95,7 +97,7 @@ bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& prima
     if(fabs(_dz[_nL]) > 0.1) continue;
     fillLeptonKinVars(mu);
     fillLeptonGenVars(mu.genParticle());
-    fillLeptonJetVariables(mu, jets, primaryVertex, *jetCorrector);
+    fillLeptonJetVariables(mu, jets, primaryVertex, *jetCorrector, *rho);
     _lFlavor[_nL] = 1;
     //Isolation variables
     _relIso[_nL]  = getRelIso03(mu, *rho);
@@ -130,7 +132,7 @@ bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& prima
     if(fabs(_dz[_nL]) > 0.1) continue;
     fillLeptonKinVars(*ele);
     fillLeptonGenVars(ele->genParticle());
-    fillLeptonJetVariables(*ele, jets, primaryVertex, *jetCorrector);
+    fillLeptonJetVariables(*ele, jets, primaryVertex, *jetCorrector, *rho);
     _lFlavor[_nL]      = 0;
     _lEtaSC[_nL]       = ele->superCluster()->eta();
     _relIso[_nL]       = getRelIso03(*ele, *rho);
@@ -241,7 +243,7 @@ bool LeptonAnalyzer::eleMuOverlap(const pat::Electron& ele){
 }
 
 
-void LeptonAnalyzer::fillLeptonJetVariables(const reco::Candidate& lepton, edm::Handle<std::vector<pat::Jet>>& jets, const reco::Vertex& vertex, const reco::JetCorrector& jetCorrector){
+void LeptonAnalyzer::fillLeptonJetVariables(const reco::Candidate& lepton, edm::Handle<std::vector<pat::Jet>>& jets, const reco::Vertex& vertex, const reco::JetCorrector& jetCorrector, double rho){
   //Make skimmed "close jet" collection
   std::vector<pat::Jet> selectedJetsAll;
   for(auto jet = jets->cbegin(); jet != jets->cend(); ++jet){
@@ -262,16 +264,30 @@ void LeptonAnalyzer::fillLeptonJetVariables(const reco::Candidate& lepton, edm::
        _ptRel[_nL]   = 0;
    } else {
        //WARNING, these jets currently remain uncorrected!!
-       // auto  l1Jet       = jet->correctedP4("L1FastJet"); // can't get this to work, annoying, please correct when you can solve it
+       auto  l1Jet       = jet.correctedP4("L1FastJet"); // can't get this to work, annoying, please correct when you can solve it
+       double jecTxt = fMetCorrector->getJetCorrectionRawPt(jet.correctedP4("Uncorrected").pt(), jet.correctedP4("Uncorrected").eta(), rho, jet.jetArea(),"L3Absolute", 0);
        double jec        = jetCorrector.correction(jet);
-       std::cout << "jet.pt() = " << jet.pt() <<"\t" << jet.correctedP4("Uncorrected").pt()*jec << std::endl;
-       auto  l1Jet       = jet.p4();
+       std::cout << "jet.pt() = " << jet.pt() <<"\t" << jet.correctedP4("Uncorrected").pt()*jec <<  "\t" << jet.correctedP4("Uncorrected").pt()*jecTxt << std::endl;
+       //auto  l1Jet       = jet.p4();
        float JEC         = jet.p4().E()/l1Jet.E();
        auto  l           = lepton.p4();
        auto  lepAwareJet = (l1Jet - l)*JEC + l;
 
+        
+       double corr = fMetCorrector->getJetCorrectionRawPt(jet.correctedP4("Uncorrected").pt(), jet.correctedP4("Uncorrected").eta(), rho, jet.jetArea(),"L1FastJet", 0);
+       double corr2 = fMetCorrector->getJetCorrectionRawPt(jet.correctedP4("Uncorrected").pt(), jet.correctedP4("Uncorrected").eta(), rho, jet.jetArea(),"L3Absolute", 0);
+
+       TLorentzVector jet2 = TLorentzVector(jet.correctedP4("Uncorrected").px(), jet.correctedP4("Uncorrected").py(), jet.correctedP4("Uncorrected").pz(), jet.correctedP4("Uncorrected").E());
+      
        TLorentzVector lV = TLorentzVector(l.px(), l.py(), l.pz(), l.E());
        TLorentzVector jV = TLorentzVector(lepAwareJet.px(), lepAwareJet.py(), lepAwareJet.pz(), lepAwareJet.E());
+
+       jet2 *= corr;
+       jet2 -= lV;
+       jet2 *= corr2/corr;
+       jet2 += lV;
+
+       std::cout << "ptRatio = " << l.pt()/lepAwareJet.pt() << "\t" << l.pt()/jet2.Pt() << std::endl; 
 
        _ptRatio[_nL] = l.pt()/lepAwareJet.pt();
        _ptRel[_nL]   = lV.Perp((jV - lV).Vect());
