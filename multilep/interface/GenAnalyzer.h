@@ -35,6 +35,26 @@ class GenAnalyzer {
     int      _gen_lMomPdg[gen_nL_max];
     bool     _gen_lIsPrompt[gen_nL_max];
 
+    //Generator neutrinos
+    unsigned _gen_nNu;
+    double _gen_nuPt[gen_nL_max];
+    double _gen_nuEta[gen_nL_max];
+    double _gen_nuPhi[gen_nL_max];
+    double _gen_nuE[gen_nL_max];
+    int _gen_nuMomPdg[gen_nL_max];
+    unsigned _gen_nuFlavor[gen_nL_max];
+    bool _gen_nuIsPrompt[gen_nL_max];
+
+    //Generator neutralinos for SUSY samples
+    static const unsigned gen_nNeutralino_max = 5;
+    unsigned _gen_nNeutralino;
+    double _gen_neutralinoPt[gen_nNeutralino_max];
+    double _gen_neutralinoEta[gen_nNeutralino_max];
+    double _gen_neutralinoPhi[gen_nNeutralino_max];
+    double _gen_neutralinoE[gen_nNeutralino_max];
+    int _gen_neutralinoMomPdg[gen_nNeutralino_max];
+    bool _gen_neutralinoIsPrompt[gen_nNeutralino_max];
+
     //Functions to find the mother of a gen particle
     const reco::GenParticle* getMother(const reco::GenParticle&, const std::vector<reco::GenParticle>&);
     const int                getMotherPdgId(const reco::GenParticle&, const std::vector<reco::GenParticle>&);
