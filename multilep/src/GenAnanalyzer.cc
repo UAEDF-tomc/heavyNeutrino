@@ -69,6 +69,8 @@ void GenAnalyzer::analyze(const edm::Event& iEvent){
 
     _gen_nL = 0;
     _gen_nPh = 0;
+    _gen_nNu = 0;
+    _gen_nNeutralino = 0;
     TLorentzVector genMetVector(0,0,0,0);
     for(const reco::GenParticle& p : *genParticles){
         //Calculate generator level MET
@@ -96,7 +98,7 @@ void GenAnalyzer::analyze(const edm::Event& iEvent){
             ++_gen_nL;
         }
         //store generator level neutrino info
-        if(p.status() == 1 && (abs(p.pdgId()) == 12 || abs(p.pdgId()) == 14 || abs(p.pdgId()) == 15) ){
+        if(p.status() == 1 && (abs(p.pdgId()) == 12 || abs(p.pdgId()) == 14 || abs(p.pdgId()) == 16) ){
             if(_gen_nNu == gen_nL_max) break;
             _gen_nuPt[_gen_nNu]       = p.pt();
             _gen_nuEta[_gen_nNu]      = p.eta();
