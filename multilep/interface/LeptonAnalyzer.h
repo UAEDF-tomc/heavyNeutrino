@@ -59,12 +59,41 @@ class LeptonAnalyzer {
 
     double _relIso[nL_max];                                                                          //lepton isolation variables
     double _relIso0p4[nL_max];                                                                       //lepton isolation variables
+    double _absIso0p3[nL_max];
+    double _absIdo0p4[nL_max];
+    double _absIso0p3Charged[nL_max];
+    double _absIso0p4Charged[nL_max];
     double _relIso0p4MuDeltaBeta[nL_max];                                                            //lepton isolation variables
     double _miniIso[nL_max];
+    double _miniAbsIso[nL_max];
     double _miniIsoCharged[nL_max];                                                              
+    double _miniAbsIsoCharged[nL_max];
     
     double _ptRel[nL_max];                                                                           //variables related to closest jet
     double _ptRatio[nL_max];
+    double _ptRatioCharged[nL_max];
+    double _closestJetNeutralEMFraction[nL_max];
+    double _closestJetNeutralEMEnergyFraction[nL_max];
+    double _closestJetNeutralHadronFraction[nL_max];
+    double _closestJetNeutralHadronEnergyFraction[nL_max];
+    double _closestJetChargedEMFraction[nL_max];
+    double _closestJetChargedEMEnergyFraction[nL_max];
+    double _closestJetChargedHadronFraction[nL_max];
+    double _closestJetMuonFraction[nL_max];
+    double _closestJetMuonEnergyFraction[nL_max];
+    unsigned _closestJetChargedMultiplicity[nL_max];
+    double _closestJetNumberOfConstituents[nL_max];
+    double _closestJetDeltaR[nL_max];
+    double _closestJetArea[nL_max];
+    double _closestJetConstituentEtaPhiSpread[nL_max];
+    double _closestJetConstituentPtDistibution[nL_max];
+    double _closestJetMass[nL_max];
+    double _closestJetGroomedMass[nL_max];
+    double _closestJetMaxDistance[nL_max];
+    double _closestJetCharge[nL_max];
+    unsigned _closestJetMuonMultiplicity[nL_max];
+    double _closestJetn60[nL_max];
+    double _closestJetn90[nL_max];
     double _closestJetCsvV2[nL_max];
     double _closestJetDeepCsv_b[nL_max];
     double _closestJetDeepCsv_bb[nL_max];
