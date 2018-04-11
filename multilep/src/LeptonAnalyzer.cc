@@ -115,6 +115,38 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
         outputTree->Branch("_lProvenanceCompressed",      &_lProvenanceCompressed,        "_lProvenanceCompressed[_nL]/i");
         outputTree->Branch("_lProvenanceConversion",      &_lProvenanceConversion,        "_lProvenanceConversion[_nL]/i");
     }
+    //new variables for leptonMva training tests
+    outputTree->Branch("_ptRatioCharged",                           &_ptRatioCharged,                                   "_ptRatioCharged[_nLight]/D");
+    outputTree->Branch("_closestJetNeutralEMFraction",              &_closestJetNeutralEMFraction,                      "_closestJetNeutralEMFraction[_nLight]/D");
+    outputTree->Branch("_closestJetNeutralEMEnergyFraction",        &_closestJetNeutralEMEnergyFraction,                "_closestJetNeutralEMEnergyFraction[_nLight]/D");
+    outputTree->Branch("_closestJetNeutralHadronFraction",          &_closestJetNeutralHadronFraction,                  "_closestJetNeutralHadronFraction[_nLight]/D");
+    outputTree->Branch("_closestJetNeutralHadronEnergyFraction",    &_closestJetNeutralHadronEnergyFraction,            "_closestJetNeutralHadronEnergyFraction[_nLight]/D");
+    outputTree->Branch("_closestJetChargedEMFraction",              &_closestJetChargedEMFraction,                      "_closestJetChargedEMFraction[_nLight]/D");
+    outputTree->Branch("_closestJetChargedEMEnergyFraction",        &_closestJetChargedEMEnergyFraction,                "_closestJetChargedEMEnergyFraction[_nLight]/D");
+    outputTree->Branch("_closestJetChargedHadronFraction",          &_closestJetChargedHadronFraction,                  "_closestJetChargedHadronFraction[_nLight]/D");
+    outputTree->Branch("_closestJetChargedHadronEnergyFraction",    &_closestJetChargedHadronEnergyFraction,            "_closestJetChargedHadronEnergyFraction[_nLight]/D");
+    outputTree->Branch("_closestJetMuonFraction",                   &_closestJetMuonFraction,                           "_closestJetMuonFraction[_nLight]/D");
+    outputTree->Branch("_closestJetMuonEnergyFraction",             &_closestJetMuonEnergyFraction,                     "_closestJetMuonEnergyFraction[_nLight]/D");
+    outputTree->Branch("_closestJetChargedMultiplicity",            &_closestJetChargedMultiplicity,                    "_closestJetChargedMultiplicity[_nLight]/i");
+    outputTree->Branch("_closestJetNumberOfConstituents",           &_closestJetNumberOfConstituents,                   "_closestJetNumberOfConstituents[_nLight]/D");
+    outputTree->Branch("_closestJetDeltaR",                         &_closestJetDeltaR,                                 "_closestJetDeltaR[_nLight]/D");
+    outputTree->Branch("_closestJetArea",                           &_closestJetArea,                                   "_closestJetArea[_nLight]/D");
+    outputTree->Branch("_closestJetConstituentEtaPhiSpread",        &_closestJetConstituentEtaPhiSpread,                "_closestJetConstituentEtaPhiSpread[_nLight]/D");
+    outputTree->Branch("_closestJetConstituentPtDistibution",       &_closestJetConstituentPtDistibution,               "_closestJetConstituentPtDistibution[_nLight]/D");
+    outputTree->Branch("_closestJetMass",                           &_closestJetMass,                                   "_closestJetMass[_nLight]/D");
+    outputTree->Branch("_closestJetGroomedMass",                    &_closestJetGroomedMass,                            "_closestJetGroomedMass[_nLight]/D");
+    outputTree->Branch("_closestJetMaxDistance",                    &_closestJetMaxDistance,                            "_closestJetMaxDistance[_nLight]/D");
+    outputTree->Branch("_closestJetCharge",                         &_closestJetCharge,                                 "_closestJetCharge[_nLight]/D");
+    outputTree->Branch("_closestJetMuonMultiplicity",               &_closestJetMuonMultiplicity,                       "_closestJetMuonMultiplicity[_nLight]/D");
+    outputTree->Branch("_closestJetn60",                            &_closestJetn60,                                    "_closestJetn60[_nLight]/D");
+    outputTree->Branch("_closestJetn90",                            &_closestJetn90,                                    "_closestJetn90[_nLight]/D");
+
+    outputTree->Branch("_absIso0p3",                                &_absIso0p3,                                        "_absIso0p3[_nLight]/D");
+    outputTree->Branch("_absIdo0p4",                                &_absIdo0p4,                                        "_absIdo0p4[_nLight]/D");
+    outputTree->Branch("_absIso0p3Charged",                         &_absIso0p3Charged,                                 "_absIso0p3Charged[_nLight]/D");
+    outputTree->Branch("_absIso0p4Charged",                         &_absIso0p4Charged,                                 "_absIso0p4Charged[_nLight]/D");
+    outputTree->Branch("_miniAbsIso",                               &_miniAbsIso,                                       "_miniAbsIso[_nLight]/D");
+    outputTree->Branch("_miniAbsIsoCharged",                        &_miniAbsIsoCharged,                                "_miniAbsIsoCharged[_nLight]/D");
 }
 
 bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& primaryVertex){

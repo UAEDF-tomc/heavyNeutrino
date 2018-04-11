@@ -79,6 +79,7 @@ class LeptonAnalyzer {
     double _closestJetChargedEMFraction[nL_max];
     double _closestJetChargedEMEnergyFraction[nL_max];
     double _closestJetChargedHadronFraction[nL_max];
+    double _closestJetChargedHadronEnergyFraction[nL_max];
     double _closestJetMuonFraction[nL_max];
     double _closestJetMuonEnergyFraction[nL_max];
     unsigned _closestJetChargedMultiplicity[nL_max];
@@ -99,10 +100,21 @@ class LeptonAnalyzer {
     double _closestJetDeepCsv_bb[nL_max];
     unsigned _selectedTrackMult[nL_max];
 
+    double _ptRel_Cut[nL_max];
+    double _ptRatio_Cut[nL_max];
+    double _closestJetDeepCsv_b_Cut[nL_max];
+    double _closestJetDeepCsv_bb_Cut[nL_max];
+    double _selectedTrackMult_Cut[nL_max];
+
+
     double _dxy[nL_max];                                                                             //pointing variables
     double _dz[nL_max];
     double _3dIP[nL_max];
     double _3dIPSig[nL_max];
+    double _3dIPSigSigned[nL_max];
+    double _3dIPSigned[nL_max];
+    double _dxySigned[nL_max];
+    double _dzSigned[nL_max];
 
     float _lElectronMva[nL_max];                                                                     //electron specific variables
     float _lElectronMvaHZZ[nL_max];
