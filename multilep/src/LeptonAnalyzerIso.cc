@@ -9,7 +9,7 @@
 #include "TTree.h"
 
 
-double LeptonAnalyzer::getRelIso04(const pat::Muon& mu, const double rho, const bool DeltaBeta) const{ //Note: effective area correction is used instead of delta-beta correction
+double LeptonAnalyzer::getAbsIso04(const pat::Muon& mu, const double rho, const bool DeltaBeta) const{ //Note: effective area correction is used instead of delta-beta correction
     double puCorr;
     if(!DeltaBeta){
         puCorr = rho*muonsEffectiveAreas.getEffectiveArea(mu.eta())*(0.4*0.4/(0.3*0.3));
@@ -17,27 +17,42 @@ double LeptonAnalyzer::getRelIso04(const pat::Muon& mu, const double rho, const 
         puCorr = 0.5*mu.pfIsolationR04().sumPUPt;
     }
     double absIso = mu.pfIsolationR04().sumChargedHadronPt + std::max(0., mu.pfIsolationR04().sumNeutralHadronEt + mu.pfIsolationR04().sumPhotonEt - puCorr);
+    return absIso;
+}
+
+double LeptonAnalyzer::getRelIso04(const pat::Muon& mu, const double rho, const bool DeltaBeta) const{ //Note: effective area correction is used instead of delta-beta correction
+    double absIso = LeptonAnalyzer::getAbsIso04(mu, rho, DeltaBeta);
     return absIso/mu.pt();
 }
 
-double LeptonAnalyzer::getRelIso03(const pat::Muon& mu, const double rho) const{ //Note: effective area correction is used instead of delta-beta correction
+
+double LeptonAnalyzer::getAbsIso03(const pat::Muon& mu, const double rho) const{
     double puCorr = rho*muonsEffectiveAreas.getEffectiveArea(mu.eta());
     double absIso = mu.pfIsolationR03().sumChargedHadronPt + std::max(0., mu.pfIsolationR03().sumNeutralHadronEt + mu.pfIsolationR03().sumPhotonEt - puCorr);
+    return absIso;
+}
+double LeptonAnalyzer::getRelIso03(const pat::Muon& mu, const double rho) const{ //Note: effective area correction is used instead of delta-beta correction
+    double absIso = LeptonAnalyzer::getAbsIso03(mu, rho); 
     return absIso/mu.pt();
+}
+
+double LeptonAnalyzer::getAbsIso03(const pat::Electron& ele, const double rho) const{
+     double puCorr = rho*electronsEffectiveAreas.getEffectiveArea(ele.superCluster()->eta());
+     double absIso = ele.pfIsolationVariables().sumChargedHadronPt + std::max(0., ele.pfIsolationVariables().sumNeutralHadronEt + ele.pfIsolationVariables().sumPhotonEt - puCorr);
+     return absIso;
 }
 
 double LeptonAnalyzer::getRelIso03(const pat::Electron& ele, const double rho) const{
-    double puCorr = rho*electronsEffectiveAreas.getEffectiveArea(ele.superCluster()->eta());
-    double absIso = ele.pfIsolationVariables().sumChargedHadronPt + std::max(0., ele.pfIsolationVariables().sumNeutralHadronEt + ele.pfIsolationVariables().sumPhotonEt - puCorr);
+    double absIso =  LeptonAnalyzer::getRelIso03(ele, rho);
     return absIso/ele.pt();
 }
 
+double LeptonAnalyzer::getAbsIso(const reco::RecoCandidate& ptcl, edm::Handle<pat::PackedCandidateCollection> pfcands,
+    double coneSize, double rho, const bool onlyCharged) const{
 
-double LeptonAnalyzer::getRelIso(const reco::RecoCandidate& ptcl, edm::Handle<pat::PackedCandidateCollection> pfcands,
-        double coneSize, double rho, const bool onlyCharged) const{
     bool deltaBeta   = false;
     double deadcone_nh(0.), deadcone_ch(0.), deadcone_ph(0.), deadcone_pu(0.);
-    if(ptcl.isElectron() and fabs(ptcl.superCluster()->eta() >1.479)){ deadcone_ch = 0.015;  deadcone_pu = 0.015; deadcone_ph = 0.08; deadcone_nh = 0;}
+    if(ptcl.isElectron() and fabs(ptcl.superCluster()->eta()) >1.479){ deadcone_ch = 0.015;  deadcone_pu = 0.015; deadcone_ph = 0.08; deadcone_nh = 0;}
     else if(ptcl.isMuon())                                           { deadcone_ch = 0.0001; deadcone_pu = 0.01;  deadcone_ph = 0.01; deadcone_nh = 0.01;}
 
     double iso_nh(0.); double iso_ch(0.);
@@ -71,16 +86,28 @@ double LeptonAnalyzer::getRelIso(const reco::RecoCandidate& ptcl, edm::Handle<pa
     if(onlyCharged)    iso = iso_ch;
     else if(deltaBeta) iso = iso_ch + std::max(0., iso_ph + iso_nh - 0.5*iso_pu);
     else               iso = iso_ch + std::max(0., iso_ph + iso_nh - puCorr*(coneSize*coneSize)/(0.3*0.3));
-
-    return iso/ptcl.pt();
+    return iso;
 }
 
+double LeptonAnalyzer::getRelIso(const reco::RecoCandidate& ptcl, edm::Handle<pat::PackedCandidateCollection> pfcands,
+    double coneSize, double rho, const bool onlyCharged) const{
 
-double LeptonAnalyzer::getMiniIsolation(const reco::RecoCandidate& ptcl, edm::Handle<pat::PackedCandidateCollection> pfcands,
-        double r_iso_min, double r_iso_max, double kt_scale, double rho, const bool onlyCharged) const{
-    //compute the miniIsolation cone
+    double absIso = LeptonAnalyzer::getAbsIso(ptcl, pfcands, coneSize, rho, onlyCharged);
+    return absIso/ptcl.pt();
+}
+
+double LeptonAnalyzer::getMiniAbsIsolation(const reco::RecoCandidate& ptcl, edm::Handle<pat::PackedCandidateCollection> pfcands,
+    double r_iso_min, double r_iso_max, double kt_scale, double rho, const bool onlyCharged) const{
+
     double max_pt = kt_scale/r_iso_min;
     double min_pt = kt_scale/r_iso_max;
     double r_iso  = kt_scale/std::max(std::min(ptcl.pt(), max_pt), min_pt);
-    return getRelIso(ptcl, pfcands, r_iso, rho, onlyCharged);
+    return getAbsIso(ptcl, pfcands, r_iso, rho, onlyCharged);
+}
+ 
+double LeptonAnalyzer::getMiniRelIsolation(const reco::RecoCandidate& ptcl, edm::Handle<pat::PackedCandidateCollection> pfcands,
+    double r_iso_min, double r_iso_max, double kt_scale, double rho, const bool onlyCharged) const{
+
+    double absMiniIso =  LeptonAnalyzer::getMiniAbsIsolation(ptcl, pfcands, r_iso_min, r_iso_max, kt_scale, rho, onlyCharged);
+    return absMiniIso/ptcl.pt();
 }

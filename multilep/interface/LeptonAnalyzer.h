@@ -60,7 +60,7 @@ class LeptonAnalyzer {
     double _relIso[nL_max];                                                                          //lepton isolation variables
     double _relIso0p4[nL_max];                                                                       //lepton isolation variables
     double _absIso0p3[nL_max];
-    double _absIdo0p4[nL_max];
+    double _absIso0p4[nL_max];
     double _absIso0p3Charged[nL_max];
     double _absIso0p4Charged[nL_max];
     double _relIso0p4MuDeltaBeta[nL_max];                                                            //lepton isolation variables
@@ -190,11 +190,16 @@ class LeptonAnalyzer {
 
     // In leptonAnalyzerIso,cc
 
+    double getAbsIso03(const pat::Muon&, const double) const;
     double getRelIso03(const pat::Muon&, const double) const;
+    double getAbsIso03(const pat::Electron&, const double) const;
     double getRelIso03(const pat::Electron&, const double) const;
     double getRelIso04(const pat::Muon& mu, const double, const bool DeltaBeta = false) const;
+    double getAbsIso04(const pat::Muon& mu, const double, const bool DeltaBeta = false) const;
+    double getAbsIso(const reco::RecoCandidate&, edm::Handle<pat::PackedCandidateCollection>, double, double, const bool onlyCharged = false) const;
     double getRelIso(const reco::RecoCandidate&, edm::Handle<pat::PackedCandidateCollection>, double, double, const bool onlyCharged = false) const;
-    double getMiniIsolation(const reco::RecoCandidate&, edm::Handle<pat::PackedCandidateCollection>, double, double, double, double, bool onlyCharged = false) const;
+    double getMiniAbsIsolation(const reco::RecoCandidate&, edm::Handle<pat::PackedCandidateCollection>, double, double, double, double, bool onlyCharged = false) const;
+    double getMiniRelIsolation(const reco::RecoCandidate&, edm::Handle<pat::PackedCandidateCollection>, double, double, double, double, bool onlyCharged = false) const;
 
     // In LeptonAnalyzerId.cc
     float dEtaInSeed(const pat::Electron*) const;
