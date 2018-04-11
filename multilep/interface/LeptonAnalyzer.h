@@ -71,20 +71,15 @@ class LeptonAnalyzer {
     
     double _ptRel[nL_max];                                                                           //variables related to closest jet
     double _ptRatio[nL_max];
-    double _ptRatioCharged[nL_max];
-    double _closestJetNeutralEMFraction[nL_max];
     double _closestJetNeutralEMEnergyFraction[nL_max];
-    double _closestJetNeutralHadronFraction[nL_max];
     double _closestJetNeutralHadronEnergyFraction[nL_max];
-    double _closestJetChargedEMFraction[nL_max];
     double _closestJetChargedEMEnergyFraction[nL_max];
-    double _closestJetChargedHadronFraction[nL_max];
     double _closestJetChargedHadronEnergyFraction[nL_max];
-    double _closestJetMuonFraction[nL_max];
     double _closestJetMuonEnergyFraction[nL_max];
     unsigned _closestJetChargedMultiplicity[nL_max];
     double _closestJetNumberOfConstituents[nL_max];
     double _closestJetDeltaR[nL_max];
+    double _closestJetDeltaRLepAware[nL_max];
     double _closestJetArea[nL_max];
     double _closestJetConstituentEtaPhiSpread[nL_max];
     double _closestJetConstituentPtDistibution[nL_max];
@@ -92,7 +87,6 @@ class LeptonAnalyzer {
     double _closestJetGroomedMass[nL_max];
     double _closestJetMaxDistance[nL_max];
     double _closestJetCharge[nL_max];
-    unsigned _closestJetMuonMultiplicity[nL_max];
     double _closestJetn60[nL_max];
     double _closestJetn90[nL_max];
     double _closestJetCsvV2[nL_max];
@@ -100,10 +94,17 @@ class LeptonAnalyzer {
     double _closestJetDeepCsv_bb[nL_max];
     unsigned _selectedTrackMult[nL_max];
 
+    double _closestJetPhotonEnergyFraction[nL_max];
+    double _closestJetElectronEnergyFraction[nL_max];
+    unsigned _closestJetMuonMultiplicity[nL_max];
+    unsigned _closestJetPhotonMultiplicity[nL_max];
+    unsigned _closestJetElectronMultiplicity[nL_max];
+
     double _ptRel_Cut[nL_max];
     double _ptRatio_Cut[nL_max];
     double _closestJetDeepCsv_b_Cut[nL_max];
     double _closestJetDeepCsv_bb_Cut[nL_max];
+    double _closestJetCsvV2_Cut[nL_max];
     double _selectedTrackMult_Cut[nL_max];
 
 

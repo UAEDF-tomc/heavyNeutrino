@@ -116,20 +116,15 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
         outputTree->Branch("_lProvenanceConversion",      &_lProvenanceConversion,        "_lProvenanceConversion[_nL]/i");
     }
     //new variables for leptonMva training tests
-    outputTree->Branch("_ptRatioCharged",                           &_ptRatioCharged,                                   "_ptRatioCharged[_nLight]/D");
-    outputTree->Branch("_closestJetNeutralEMFraction",              &_closestJetNeutralEMFraction,                      "_closestJetNeutralEMFraction[_nLight]/D");
     outputTree->Branch("_closestJetNeutralEMEnergyFraction",        &_closestJetNeutralEMEnergyFraction,                "_closestJetNeutralEMEnergyFraction[_nLight]/D");
-    outputTree->Branch("_closestJetNeutralHadronFraction",          &_closestJetNeutralHadronFraction,                  "_closestJetNeutralHadronFraction[_nLight]/D");
     outputTree->Branch("_closestJetNeutralHadronEnergyFraction",    &_closestJetNeutralHadronEnergyFraction,            "_closestJetNeutralHadronEnergyFraction[_nLight]/D");
-    outputTree->Branch("_closestJetChargedEMFraction",              &_closestJetChargedEMFraction,                      "_closestJetChargedEMFraction[_nLight]/D");
     outputTree->Branch("_closestJetChargedEMEnergyFraction",        &_closestJetChargedEMEnergyFraction,                "_closestJetChargedEMEnergyFraction[_nLight]/D");
-    outputTree->Branch("_closestJetChargedHadronFraction",          &_closestJetChargedHadronFraction,                  "_closestJetChargedHadronFraction[_nLight]/D");
     outputTree->Branch("_closestJetChargedHadronEnergyFraction",    &_closestJetChargedHadronEnergyFraction,            "_closestJetChargedHadronEnergyFraction[_nLight]/D");
-    outputTree->Branch("_closestJetMuonFraction",                   &_closestJetMuonFraction,                           "_closestJetMuonFraction[_nLight]/D");
     outputTree->Branch("_closestJetMuonEnergyFraction",             &_closestJetMuonEnergyFraction,                     "_closestJetMuonEnergyFraction[_nLight]/D");
     outputTree->Branch("_closestJetChargedMultiplicity",            &_closestJetChargedMultiplicity,                    "_closestJetChargedMultiplicity[_nLight]/i");
     outputTree->Branch("_closestJetNumberOfConstituents",           &_closestJetNumberOfConstituents,                   "_closestJetNumberOfConstituents[_nLight]/D");
     outputTree->Branch("_closestJetDeltaR",                         &_closestJetDeltaR,                                 "_closestJetDeltaR[_nLight]/D");
+    outputTree->Branch("_closestJetDeltaRLepAware",                 &_closestJetDeltaRLepAware,                         "_closestJetDeltaRLepAware[_nLight]/D");
     outputTree->Branch("_closestJetArea",                           &_closestJetArea,                                   "_closestJetArea[_nLight]/D");
     outputTree->Branch("_closestJetConstituentEtaPhiSpread",        &_closestJetConstituentEtaPhiSpread,                "_closestJetConstituentEtaPhiSpread[_nLight]/D");
     outputTree->Branch("_closestJetConstituentPtDistibution",       &_closestJetConstituentPtDistibution,               "_closestJetConstituentPtDistibution[_nLight]/D");
@@ -137,7 +132,6 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("_closestJetGroomedMass",                    &_closestJetGroomedMass,                            "_closestJetGroomedMass[_nLight]/D");
     outputTree->Branch("_closestJetMaxDistance",                    &_closestJetMaxDistance,                            "_closestJetMaxDistance[_nLight]/D");
     outputTree->Branch("_closestJetCharge",                         &_closestJetCharge,                                 "_closestJetCharge[_nLight]/D");
-    outputTree->Branch("_closestJetMuonMultiplicity",               &_closestJetMuonMultiplicity,                       "_closestJetMuonMultiplicity[_nLight]/D");
     outputTree->Branch("_closestJetn60",                            &_closestJetn60,                                    "_closestJetn60[_nLight]/D");
     outputTree->Branch("_closestJetn90",                            &_closestJetn90,                                    "_closestJetn90[_nLight]/D");
 
@@ -147,6 +141,21 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("_absIso0p4Charged",                         &_absIso0p4Charged,                                 "_absIso0p4Charged[_nLight]/D");
     outputTree->Branch("_miniAbsIso",                               &_miniAbsIso,                                       "_miniAbsIso[_nLight]/D");
     outputTree->Branch("_miniAbsIsoCharged",                        &_miniAbsIsoCharged,                                "_miniAbsIsoCharged[_nLight]/D");
+
+    outputTree->Branch("_closestJetMuonMultiplicity",               &_closestJetMuonMultiplicity,                       "_closestJetMuonMultiplicity[_nLight]/D");
+    outputTree->Branch("_closestJetPhotonEnergyFraction",           &_closestJetPhotonEnergyFraction,                   "_closestJetPhotonEnergyFraction[_nLight]/D");
+    outputTree->Branch("_closestJetElectronEnergyFraction",         &_closestJetElectronEnergyFraction,                 "_closestJetElectronEnergyFraction[_nLight]/D");
+    outputTree->Branch("_closestJetPhotonMultiplicity",             &_closestJetPhotonMultiplicity,                     "_closestJetPhotonMultiplicity[_nLight]/D");
+    outputTree->Branch("_closestJetElectronMultiplicity",           &_closestJetElectronMultiplicity,                   "_closestJetElectronMultiplicity[_nLight]/D");
+
+
+    //values that still have a 0.4 deltaR cut on the closest jet
+    outputTree->Branch("_ptRatio_Cut",                              &_ptRatio_Cut,                                      "_ptRatio_Cut[_nLight]/D");
+    outputTree->Branch("_ptRel_Cut",                                &_ptRel_Cut,                                        "_ptRel_Cut[_nLight]/D");
+    outputTree->Branch("_closestJetCsvV2_Cut",                      &_closestJetCsvV2_Cut,                              "_closestJetCsvV2_Cut[_nLight]/D");
+    outputTree->Branch("_closestJetDeepCsv_b_Cut",                  &_closestJetDeepCsv_b_Cut,                          "_closestJetDeepCsv_b_Cut[_nLight]/D");
+    outputTree->Branch("_closestJetDeepCsv_bb_Cut",                 &_closestJetDeepCsv_bb_Cut,                         "_closestJetDeepCsv_bb_Cut[_nLight]/D");
+    outputTree->Branch("_selectedTrackMult_Cut",                    &_selectedTrackMult_Cut,                            "_selectedTrackMult_Cut[_nLight]/D");
 }
 
 bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& primaryVertex){
@@ -432,13 +441,36 @@ void LeptonAnalyzer::fillLeptonJetVariables(const reco::Candidate& lepton, edm::
         if(reco::deltaR(selectedJetsAll[j], lepton) < reco::deltaR(selectedJetsAll[closestIndex], lepton)) closestIndex = j;
     }
     const pat::Jet& jet = selectedJetsAll[closestIndex];
-    if(selectedJetsAll.size() == 0 || reco::deltaR(jet, lepton) > 0.4){ //Now includes safeguard for 0 jet events
+    if(selectedJetsAll.size() == 0){ //Now includes safeguard for 0 jet events
         _ptRatio[_nL] = 1;
         _ptRel[_nL] = 0;
         _closestJetCsvV2[_nL] = 0;
         _closestJetDeepCsv_b[_nL] = 0;
         _closestJetDeepCsv_bb[_nL] = 0;
         _selectedTrackMult[_nL] = 0;
+
+        _closestJetNeutralEMEnergyFraction[_nL] = 0;
+        _closestJetNeutralHadronEnergyFraction[_nL] = 0;
+        _closestJetChargedEMEnergyFraction[_nL] = 0;
+        _closestJetChargedHadronEnergyFraction[_nL] = 0;
+        _closestJetMuonEnergyFraction[_nL] = 0;
+        _closestJetChargedMultiplicity[_nL] = 0;
+        _closestJetNumberOfConstituents[_nL] = 0;
+        _closestJetArea[_nL] = 0;
+        _closestJetConstituentEtaPhiSpread[_nL] = 0;
+        _closestJetConstituentPtDistibution[_nL] = 0;
+        _closestJetMass[_nL] = 0;
+        _closestJetGroomedMass[_nL] = 0;
+        _closestJetMaxDistance[_nL] = 0;
+        _closestJetCharge[_nL] = 0;
+        _closestJetn60[_nL] = 0;
+        _closestJetn90[_nL] = 0;
+
+        _closestJetPhotonEnergyFraction[_nL] = 0;
+        _closestJetElectronEnergyFraction[_nL] = 0;
+        _closestJetMuonMultiplicity[_nL] = 0;
+        _closestJetPhotonMultiplicity[_nL] = 0;
+        _closestJetElectronMultiplicity[_nL] = 0;
     } else {
         /*
         double totalJEC = multilepAnalyzer->jec->jetCorrection(jet.correctedP4("Uncorrected").Pt(), jet.correctedP4("Uncorrected").Eta(), rho, jet.jetArea(), jecLevel);
@@ -449,6 +481,9 @@ void LeptonAnalyzer::fillLeptonJetVariables(const reco::Candidate& lepton, edm::
         TLorentzVector lepAwareJet = (l1Jet - l)*JEC + l;
         float JEC = totalJEC/l1JEC;
         */
+
+        _closestJetDeltaR[_nL] = reco::deltaR(jet, lepton);
+
         auto  l1Jet       = jet.correctedP4("L1FastJet");
         float JEC         = jet.p4().E()/l1Jet.E();
         auto  l           = lepton.p4();
@@ -457,11 +492,20 @@ void LeptonAnalyzer::fillLeptonJetVariables(const reco::Candidate& lepton, edm::
 
         TLorentzVector lV(l.Px(), l.Py(), l.Pz(), l.E());
         TLorentzVector jV(lepAwareJet.Px(), lepAwareJet.Py(), lepAwareJet.Pz(), lepAwareJet.E());
+        
+        _closestJetDeltaRLepAware[_nL] = lV.DeltaR(jV);
+
         _ptRatio[_nL]       = l.Pt()/lepAwareJet.Pt();
         _ptRel[_nL]         = lV.Perp((jV - lV).Vect());
         _closestJetCsvV2[_nL] = jet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
         _closestJetDeepCsv_b[_nL] = jet.bDiscriminator("pfDeepCSVJetTags:probb");
         _closestJetDeepCsv_bb[_nL] = jet.bDiscriminator("pfDeepCSVJetTags:probbb");
+
+        _ptRatio_Cut[_nL]       = l.Pt()/lepAwareJet.Pt();
+        _ptRel_Cut[_nL]         = lV.Perp((jV - lV).Vect());
+        _closestJetCsvV2_Cut[_nL] = jet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
+        _closestJetDeepCsv_b_Cut[_nL] = jet.bDiscriminator("pfDeepCSVJetTags:probb");
+        _closestJetDeepCsv_bb_Cut[_nL] = jet.bDiscriminator("pfDeepCSVJetTags:probbb");
         //compute selected track multiplicity of closest jet
         _selectedTrackMult[_nL] = 0;
         for(unsigned d = 0; d < jet.numberOfDaughters(); ++d){
@@ -476,5 +520,38 @@ void LeptonAnalyzer::fillLeptonJetVariables(const reco::Candidate& lepton, edm::
                 if(daughterDeltaR < 0.4 && daughter->fromPV() > 1 && goodTrack) ++_selectedTrackMult[_nL];
             }
         }
+        _selectedTrackMult_Cut[_nL] = _selectedTrackMult[_nL]; 
+
+        _closestJetNeutralEMEnergyFraction[_nL] = jet.neutralEmEnergyFraction();
+        _closestJetNeutralHadronEnergyFraction[_nL] = jet.neutralHadronEnergyFraction();
+        _closestJetChargedEMEnergyFraction[_nL] = jet.chargedEmEnergyFraction();
+        _closestJetChargedHadronEnergyFraction[_nL] = jet.chargedHadronEnergyFraction();
+        _closestJetMuonEnergyFraction[_nL] = jet.muonEnergyFraction();
+        _closestJetChargedMultiplicity[_nL] = jet.chargedMultiplicity();
+        _closestJetNumberOfConstituents[_nL] = jet.nConstituents();
+        _closestJetArea[_nL] = jet.jetArea();
+        _closestJetConstituentEtaPhiSpread[_nL] = jet.constituentEtaPhiSpread();
+        _closestJetConstituentPtDistibution[_nL] = jet.constituentPtDistribution();
+        _closestJetMass[_nL] = jet.mass();
+        _closestJetGroomedMass[_nL] = jet.groomedMass();
+        _closestJetMaxDistance[_nL] = jet.maxDistance();
+        _closestJetCharge[_nL] = jet.jetCharge();
+        _closestJetn60[_nL] = jet.n60();
+        _closestJetn90[_nL] = jet.n90();
+
+        _closestJetPhotonEnergyFraction[_nL] = jet.photonEnergyFraction();
+        _closestJetElectronEnergyFraction[_nL] = jet.electronEnergyFraction();
+        _closestJetMuonMultiplicity[_nL] = jet.muonMultiplicity();
+        _closestJetPhotonMultiplicity[_nL] = jet.photonMultiplicity();
+        _closestJetElectronMultiplicity[_nL] = jet.electronMultiplicity(); 
+
+    }
+    if(reco::deltaR(jet, lepton) > 0.4){
+       _ptRatio_Cut[_nL] = 1;
+       _ptRel_Cut[_nL] = 0;
+       _closestJetCsvV2_Cut[_nL] = 0;
+       _closestJetDeepCsv_b_Cut[_nL] = 0;
+       _closestJetDeepCsv_bb_Cut[_nL] = 0;
+       _selectedTrackMult_Cut[_nL] = 0;
     }
 }
