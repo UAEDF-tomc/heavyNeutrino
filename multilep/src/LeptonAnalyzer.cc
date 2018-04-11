@@ -141,6 +141,8 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("_absIso0p4Charged",                         &_absIso0p4Charged,                                 "_absIso0p4Charged[_nLight]/D");
     outputTree->Branch("_miniAbsIso",                               &_miniAbsIso,                                       "_miniAbsIso[_nLight]/D");
     outputTree->Branch("_miniAbsIsoCharged",                        &_miniAbsIsoCharged,                                "_miniAbsIsoCharged[_nLight]/D");
+    outputTree->Branch("_relIsoCharged",                            &_relIsoCharged,                                    "_relIsoCharged[_nLight]/D");
+    outputTree->Branch("_relIso0p4Charged",                         &_relIso0p4Charged,                                 "_relIso0p4Charged[_nLight]/D");
 
     outputTree->Branch("_closestJetMuonMultiplicity",               &_closestJetMuonMultiplicity,                       "_closestJetMuonMultiplicity[_nLight]/D");
     outputTree->Branch("_closestJetPhotonEnergyFraction",           &_closestJetPhotonEnergyFraction,                   "_closestJetPhotonEnergyFraction[_nLight]/D");
@@ -206,9 +208,13 @@ bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& prima
         _lMuonTrackPtErr[_nL] = mu.innerTrack()->ptError();
 
         _relIso[_nL]         = getRelIso03(mu, *rho);                     // Isolation variables
+        _relIsoCharged[_nL]  = getRelIso03(mu, *rho, true);
         _absIso0p3[_nL]      = getAbsIso03(mu, *rho);
+        _absIso0p3Charged[_nL] = getAbsIso03(mu, *rho, true);
         _relIso0p4[_nL]      = getRelIso04(mu, *rho);                                                     
+        _relIso0p4Charged[_nL] = getRelIso04(mu, *rho, false, true);
         _absIso0p4[_nL]      = getAbsIso04(mu, *rho);
+        _absIso0p4Charged[_nL]      = getAbsIso04(mu, *rho, false, true);
         _relIso0p4MuDeltaBeta[_nL] = getRelIso04(mu, *rho, true);                                                     
         _miniIso[_nL]        = getMiniRelIsolation(mu, packedCands, 0.05, 0.2, 10, *rho, false);
         _miniAbsIso[_nL]     = getMiniAbsIsolation(mu, packedCands, 0.05, 0.2, 10, *rho, false);
@@ -260,9 +266,13 @@ bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& prima
         _lEtaSC[_nL]           = ele->superCluster()->eta();
 
         _relIso[_nL]                    = getRelIso03(*ele, *rho);
+        _relIsoCharged[_nL]             = getRelIso03(*ele, *rho, true);
         _absIso0p3[_nL]                 = getAbsIso03(*ele, *rho);
+        _absIso0p3Charged[_nL]          = getAbsIso03(*ele, *rho, true);
         _relIso0p4[_nL]                 = getRelIso(*ele, packedCands, 0.4, *rho, false);
+        _relIso0p4Charged[_nL]          = getRelIso(*ele, packedCands, 0.4, *rho, true);
         _absIso0p4[_nL]                 = getAbsIso(*ele, packedCands, 0.4, *rho, false);
+        _absIso0p4Charged[_nL]          = getAbsIso(*ele, packedCands, 0.4, *rho, true);
         _miniIso[_nL]                   = getMiniRelIsolation(*ele, packedCands, 0.05, 0.2, 10, *rho, false);
         _miniAbsIso[_nL]                = getMiniAbsIsolation(*ele, packedCands, 0.05, 0.2, 10, *rho, false);
         _miniIsoCharged[_nL]            = getMiniRelIsolation(*ele, packedCands, 0.05, 0.2, 10, *rho, true);

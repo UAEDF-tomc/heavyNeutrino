@@ -9,40 +9,41 @@
 #include "TTree.h"
 
 
-double LeptonAnalyzer::getAbsIso04(const pat::Muon& mu, const double rho, const bool DeltaBeta) const{ //Note: effective area correction is used instead of delta-beta correction
+double LeptonAnalyzer::getAbsIso04(const pat::Muon& mu, const double rho, const bool DeltaBeta, const bool onlyCharged) const{ //Note: effective area correction is used instead of delta-beta correction
     double puCorr;
     if(!DeltaBeta){
         puCorr = rho*muonsEffectiveAreas.getEffectiveArea(mu.eta())*(0.4*0.4/(0.3*0.3));
     } else{
         puCorr = 0.5*mu.pfIsolationR04().sumPUPt;
     }
-    double absIso = mu.pfIsolationR04().sumChargedHadronPt + std::max(0., mu.pfIsolationR04().sumNeutralHadronEt + mu.pfIsolationR04().sumPhotonEt - puCorr);
+    double absIso = mu.pfIsolationR04().sumChargedHadronPt + (onlyCharged ? 0. : std::max(0., mu.pfIsolationR04().sumNeutralHadronEt + mu.pfIsolationR04().sumPhotonEt - puCorr) );
     return absIso;
 }
 
-double LeptonAnalyzer::getRelIso04(const pat::Muon& mu, const double rho, const bool DeltaBeta) const{ //Note: effective area correction is used instead of delta-beta correction
+double LeptonAnalyzer::getRelIso04(const pat::Muon& mu, const double rho, const bool DeltaBeta, const bool onlyCharged) const{ //Note: effective area correction is used instead of delta-beta correction
     double absIso = LeptonAnalyzer::getAbsIso04(mu, rho, DeltaBeta);
     return absIso/mu.pt();
 }
 
 
-double LeptonAnalyzer::getAbsIso03(const pat::Muon& mu, const double rho) const{
+double LeptonAnalyzer::getAbsIso03(const pat::Muon& mu, const double rho, const bool onlyCharged) const{
     double puCorr = rho*muonsEffectiveAreas.getEffectiveArea(mu.eta());
-    double absIso = mu.pfIsolationR03().sumChargedHadronPt + std::max(0., mu.pfIsolationR03().sumNeutralHadronEt + mu.pfIsolationR03().sumPhotonEt - puCorr);
+    double absIso = mu.pfIsolationR03().sumChargedHadronPt + (onlyCharged? 0. : std::max(0., mu.pfIsolationR03().sumNeutralHadronEt + mu.pfIsolationR03().sumPhotonEt - puCorr) );
     return absIso;
 }
-double LeptonAnalyzer::getRelIso03(const pat::Muon& mu, const double rho) const{ //Note: effective area correction is used instead of delta-beta correction
+
+double LeptonAnalyzer::getRelIso03(const pat::Muon& mu, const double rho, const bool onlyCharged) const{ //Note: effective area correction is used instead of delta-beta correction
     double absIso = LeptonAnalyzer::getAbsIso03(mu, rho); 
     return absIso/mu.pt();
 }
 
-double LeptonAnalyzer::getAbsIso03(const pat::Electron& ele, const double rho) const{
+double LeptonAnalyzer::getAbsIso03(const pat::Electron& ele, const double rho, const bool onlyCharged) const{
      double puCorr = rho*electronsEffectiveAreas.getEffectiveArea(ele.superCluster()->eta());
-     double absIso = ele.pfIsolationVariables().sumChargedHadronPt + std::max(0., ele.pfIsolationVariables().sumNeutralHadronEt + ele.pfIsolationVariables().sumPhotonEt - puCorr);
+     double absIso = ele.pfIsolationVariables().sumChargedHadronPt + (onlyCharged? 0. : std::max(0., ele.pfIsolationVariables().sumNeutralHadronEt + ele.pfIsolationVariables().sumPhotonEt - puCorr) );
      return absIso;
 }
 
-double LeptonAnalyzer::getRelIso03(const pat::Electron& ele, const double rho) const{
+double LeptonAnalyzer::getRelIso03(const pat::Electron& ele, const double rho, const bool onlyCharged) const{
     double absIso =  LeptonAnalyzer::getRelIso03(ele, rho);
     return absIso/ele.pt();
 }
