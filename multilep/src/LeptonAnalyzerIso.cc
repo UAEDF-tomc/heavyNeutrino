@@ -44,7 +44,7 @@ double LeptonAnalyzer::getAbsIso03(const pat::Electron& ele, const double rho, c
 }
 
 double LeptonAnalyzer::getRelIso03(const pat::Electron& ele, const double rho, const bool onlyCharged) const{
-    double absIso =  LeptonAnalyzer::getRelIso03(ele, rho);
+    double absIso =  LeptonAnalyzer::getAbsIso03(ele, rho);
     return absIso/ele.pt();
 }
 

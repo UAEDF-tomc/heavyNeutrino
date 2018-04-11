@@ -86,11 +86,10 @@ class LeptonAnalyzer {
     double _closestJetConstituentEtaPhiSpread[nL_max];
     double _closestJetConstituentPtDistibution[nL_max];
     double _closestJetMass[nL_max];
-    double _closestJetGroomedMass[nL_max];
     double _closestJetMaxDistance[nL_max];
     double _closestJetCharge[nL_max];
-    double _closestJetn60[nL_max];
-    double _closestJetn90[nL_max];
+    unsigned _closestJetn60[nL_max];
+    unsigned _closestJetn90[nL_max];
     double _closestJetCsvV2[nL_max];
     double _closestJetDeepCsv_b[nL_max];
     double _closestJetDeepCsv_bb[nL_max];
@@ -98,9 +97,9 @@ class LeptonAnalyzer {
 
     double _closestJetPhotonEnergyFraction[nL_max];
     double _closestJetElectronEnergyFraction[nL_max];
-    unsigned _closestJetMuonMultiplicity[nL_max];
-    unsigned _closestJetPhotonMultiplicity[nL_max];
-    unsigned _closestJetElectronMultiplicity[nL_max];
+    //unsigned _closestJetMuonMultiplicity[nL_max];
+    //unsigned _closestJetPhotonMultiplicity[nL_max];
+    //unsigned _closestJetElectronMultiplicity[nL_max];
 
     double _ptRel_Cut[nL_max];
     double _ptRatio_Cut[nL_max];
@@ -115,9 +114,6 @@ class LeptonAnalyzer {
     double _3dIP[nL_max];
     double _3dIPSig[nL_max];
     double _3dIPSigSigned[nL_max];
-    double _3dIPSigned[nL_max];
-    double _dxySigned[nL_max];
-    double _dzSigned[nL_max];
 
     float _lElectronMva[nL_max];                                                                     //electron specific variables
     float _lElectronMvaHZZ[nL_max];

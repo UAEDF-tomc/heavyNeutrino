@@ -129,11 +129,10 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("_closestJetConstituentEtaPhiSpread",        &_closestJetConstituentEtaPhiSpread,                "_closestJetConstituentEtaPhiSpread[_nLight]/D");
     outputTree->Branch("_closestJetConstituentPtDistibution",       &_closestJetConstituentPtDistibution,               "_closestJetConstituentPtDistibution[_nLight]/D");
     outputTree->Branch("_closestJetMass",                           &_closestJetMass,                                   "_closestJetMass[_nLight]/D");
-    outputTree->Branch("_closestJetGroomedMass",                    &_closestJetGroomedMass,                            "_closestJetGroomedMass[_nLight]/D");
     outputTree->Branch("_closestJetMaxDistance",                    &_closestJetMaxDistance,                            "_closestJetMaxDistance[_nLight]/D");
     outputTree->Branch("_closestJetCharge",                         &_closestJetCharge,                                 "_closestJetCharge[_nLight]/D");
-    outputTree->Branch("_closestJetn60",                            &_closestJetn60,                                    "_closestJetn60[_nLight]/D");
-    outputTree->Branch("_closestJetn90",                            &_closestJetn90,                                    "_closestJetn90[_nLight]/D");
+    outputTree->Branch("_closestJetn60",                            &_closestJetn60,                                    "_closestJetn60[_nLight]/i");
+    outputTree->Branch("_closestJetn90",                            &_closestJetn90,                                    "_closestJetn90[_nLight]/i");
 
     outputTree->Branch("_absIso0p3",                                &_absIso0p3,                                        "_absIso0p3[_nLight]/D");
     outputTree->Branch("_absIso0p4",                                &_absIso0p4,                                        "_absIso0p4[_nLight]/D");
@@ -144,12 +143,14 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("_relIsoCharged",                            &_relIsoCharged,                                    "_relIsoCharged[_nLight]/D");
     outputTree->Branch("_relIso0p4Charged",                         &_relIso0p4Charged,                                 "_relIso0p4Charged[_nLight]/D");
 
-    outputTree->Branch("_closestJetMuonMultiplicity",               &_closestJetMuonMultiplicity,                       "_closestJetMuonMultiplicity[_nLight]/D");
+    //outputTree->Branch("_closestJetMuonMultiplicity",               &_closestJetMuonMultiplicity,                       "_closestJetMuonMultiplicity[_nLight]/D");
     outputTree->Branch("_closestJetPhotonEnergyFraction",           &_closestJetPhotonEnergyFraction,                   "_closestJetPhotonEnergyFraction[_nLight]/D");
     outputTree->Branch("_closestJetElectronEnergyFraction",         &_closestJetElectronEnergyFraction,                 "_closestJetElectronEnergyFraction[_nLight]/D");
-    outputTree->Branch("_closestJetPhotonMultiplicity",             &_closestJetPhotonMultiplicity,                     "_closestJetPhotonMultiplicity[_nLight]/D");
-    outputTree->Branch("_closestJetElectronMultiplicity",           &_closestJetElectronMultiplicity,                   "_closestJetElectronMultiplicity[_nLight]/D");
+    //outputTree->Branch("_closestJetPhotonMultiplicity",             &_closestJetPhotonMultiplicity,                     "_closestJetPhotonMultiplicity[_nLight]/D");
+    //outputTree->Branch("_closestJetElectronMultiplicity",           &_closestJetElectronMultiplicity,                   "_closestJetElectronMultiplicity[_nLight]/D");
 
+    //signed impact parameters
+    outputTree->Branch("_3dIPSigSigned",                            &_3dIPSigSigned,                                    "_3dIPSigSigned[_nLight]/D");
 
     //values that still have a 0.4 deltaR cut on the closest jet
     outputTree->Branch("_ptRatio_Cut",                              &_ptRatio_Cut,                                      "_ptRatio_Cut[_nLight]/D");
@@ -397,6 +398,7 @@ void LeptonAnalyzer::fillLeptonImpactParameters(const pat::Electron& ele, const 
     _dz[_nL]      = ele.gsfTrack()->dz(vertex.position());
     _3dIP[_nL]    = ele.dB(pat::Electron::PV3D);
     _3dIPSig[_nL] = fabs(ele.dB(pat::Electron::PV3D)/ele.edB(pat::Electron::PV3D));
+    _3dIPSigSigned[_nL] = ele.dB(pat::Electron::PV3D)/ele.edB(pat::Electron::PV3D);
 }
 
 void LeptonAnalyzer::fillLeptonImpactParameters(const pat::Muon& muon, const reco::Vertex& vertex){
@@ -404,6 +406,7 @@ void LeptonAnalyzer::fillLeptonImpactParameters(const pat::Muon& muon, const rec
     _dz[_nL]      = muon.innerTrack()->dz(vertex.position());
     _3dIP[_nL]    = muon.dB(pat::Muon::PV3D);
     _3dIPSig[_nL] = fabs(muon.dB(pat::Muon::PV3D)/muon.edB(pat::Muon::PV3D));
+    _3dIPSigSigned[_nL] = muon.dB(pat::Muon::PV3D)/muon.edB(pat::Muon::PV3D);
 }
 
 void LeptonAnalyzer::fillLeptonImpactParameters(const pat::Tau& tau, const reco::Vertex& vertex){
@@ -479,7 +482,6 @@ void LeptonAnalyzer::fillLeptonJetVariables(const reco::Candidate& lepton, edm::
         _closestJetConstituentEtaPhiSpread[_nL] = 0;
         _closestJetConstituentPtDistibution[_nL] = 0;
         _closestJetMass[_nL] = 0;
-        _closestJetGroomedMass[_nL] = 0;
         _closestJetMaxDistance[_nL] = 0;
         _closestJetCharge[_nL] = 0;
         _closestJetn60[_nL] = 0;
@@ -487,9 +489,9 @@ void LeptonAnalyzer::fillLeptonJetVariables(const reco::Candidate& lepton, edm::
 
         _closestJetPhotonEnergyFraction[_nL] = 0;
         _closestJetElectronEnergyFraction[_nL] = 0;
-        _closestJetMuonMultiplicity[_nL] = 0;
-        _closestJetPhotonMultiplicity[_nL] = 0;
-        _closestJetElectronMultiplicity[_nL] = 0;
+        //_closestJetMuonMultiplicity[_nL] = 0;
+        //_closestJetPhotonMultiplicity[_nL] = 0;
+        //_closestJetElectronMultiplicity[_nL] = 0;
     } else {
         /*
         double totalJEC = multilepAnalyzer->jec->jetCorrection(jet.correctedP4("Uncorrected").Pt(), jet.correctedP4("Uncorrected").Eta(), rho, jet.jetArea(), jecLevel);
@@ -552,7 +554,6 @@ void LeptonAnalyzer::fillLeptonJetVariables(const reco::Candidate& lepton, edm::
         _closestJetConstituentEtaPhiSpread[_nL] = jet.constituentEtaPhiSpread();
         _closestJetConstituentPtDistibution[_nL] = jet.constituentPtDistribution();
         _closestJetMass[_nL] = jet.mass();
-        _closestJetGroomedMass[_nL] = jet.groomedMass();
         _closestJetMaxDistance[_nL] = jet.maxDistance();
         _closestJetCharge[_nL] = jet.jetCharge();
         _closestJetn60[_nL] = jet.n60();
@@ -560,9 +561,9 @@ void LeptonAnalyzer::fillLeptonJetVariables(const reco::Candidate& lepton, edm::
 
         _closestJetPhotonEnergyFraction[_nL] = jet.photonEnergyFraction();
         _closestJetElectronEnergyFraction[_nL] = jet.electronEnergyFraction();
-        _closestJetMuonMultiplicity[_nL] = jet.muonMultiplicity();
-        _closestJetPhotonMultiplicity[_nL] = jet.photonMultiplicity();
-        _closestJetElectronMultiplicity[_nL] = jet.electronMultiplicity(); 
+        //_closestJetMuonMultiplicity[_nL] = jet.muonMultiplicity();
+        //_closestJetPhotonMultiplicity[_nL] = jet.photonMultiplicity();
+        //_closestJetElectronMultiplicity[_nL] = jet.electronMultiplicity(); 
 
     }
     if(reco::deltaR(jet, lepton) > 0.4){
