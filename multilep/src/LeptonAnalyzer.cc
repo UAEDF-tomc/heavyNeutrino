@@ -48,7 +48,7 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("_dz",                           &_dz,                           "_dz[_nL]/D");
     outputTree->Branch("_3dIP",                         &_3dIP,                         "_3dIP[_nL]/D");
     outputTree->Branch("_3dIPSig",                      &_3dIPSig,                      "_3dIPSig[_nL]/D");
-    outputTree->Branch("_lElectronSummer16MvaGP",       &_lElectronMvaSummer16GP,       "_lElectronMvaSummer16GP[_nLight]/F");
+/*  outputTree->Branch("_lElectronSummer16MvaGP",       &_lElectronMvaSummer16GP,       "_lElectronMvaSummer16GP[_nLight]/F");
     outputTree->Branch("_lElectronSummer16MvaHZZ",      &_lElectronMvaSummer16HZZ,      "_lElectronMvaSummer16HZZ[_nLight]/F");
     outputTree->Branch("_lElectronMvaFall17v1NoIso",    &_lElectronMvaFall17v1NoIso,    "_lElectronMvaFall17v1NoIso[_nLight]/F");
     outputTree->Branch("_lElectronMvaFall17Iso",        &_lElectronMvaFall17Iso,        "_lElectronMvaFall17Iso[_nLight]/F");
@@ -64,7 +64,7 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("_lElectronDeltaPhiSuperClusterTrack",   &_lElectronDeltaPhiSuperClusterTrack,   "_lElectronDeltaPhiSuperClusterTrack[_nLight]/D");
     outputTree->Branch("_lElectronDeltaEtaSuperClusterTrack",   &_lElectronDeltaEtaSuperClusterTrack,   "_lElectronDeltaEtaSuperClusterTrack[_nLight]/D");
     outputTree->Branch("_lElectronEInvMinusPInv",               &_lElectronEInvMinusPInv,               "_lElectronEInvMinusPInv[_nLight]/D");
-    outputTree->Branch("_lElectronHOverE",                      &_lElectronHOverE,                      "_lElectronHOverE[_nLight]/D");
+    outputTree->Branch("_lElectronHOverE",                      &_lElectronHOverE,                      "_lElectronHOverE[_nLight]/D");*/
     outputTree->Branch("_leptonMvaTTH",                 &_leptonMvaTTH,                 "_leptonMvaTTH[_nLight]/D");
     outputTree->Branch("_leptonMvatZq",                 &_leptonMvatZq,                 "_leptonMvatZq[_nLight]/D");
     outputTree->Branch("_leptonMvaTOP",                 &_leptonMvaTOP,                 "_leptonMvaTOP[_nLight]/D");
@@ -72,7 +72,7 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("_lPOGLoose",                    &_lPOGLoose,                    "_lPOGLoose[_nL]/O");
     outputTree->Branch("_lPOGMedium",                   &_lPOGMedium,                   "_lPOGMedium[_nL]/O");
     outputTree->Branch("_lPOGTight",                    &_lPOGTight,                    "_lPOGTight[_nL]/O");
-    outputTree->Branch("_tauMuonVetoLoose",             &_tauMuonVetoLoose,             "_tauMuonVetoLoose[_nL]/O");
+/*  outputTree->Branch("_tauMuonVetoLoose",             &_tauMuonVetoLoose,             "_tauMuonVetoLoose[_nL]/O");
     outputTree->Branch("_tauEleVetoLoose",              &_tauEleVetoLoose,              "_tauEleVetoLoose[_nL]/O");
     outputTree->Branch("_tauDecayMode",                 &_tauDecayMode,                 "_tauDecayMode[_nL]/i");
     outputTree->Branch("_decayModeFinding",             &_decayModeFinding,             "_decayModeFinding[_nL]/O");
@@ -83,7 +83,7 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("_tauIsoMVADBdR03oldDMwLT",      &_tauIsoMVADBdR03oldDMwLT,      "_tauIsoMVADBdR03oldDMwLT[_nL]/D");
     outputTree->Branch("_tauIsoMVADBdR03newDMwLT",      &_tauIsoMVADBdR03newDMwLT,      "_tauIsoMVADBdR03newDMwLT[_nL]/D");
     outputTree->Branch("_tauIsoMVAPWnewDMwLT",          &_tauIsoMVAPWnewDMwLT,          "_tauIsoMVAPWnewDMwLT[_nL]/D");
-    outputTree->Branch("_tauIsoMVAPWoldDMwLT",          &_tauIsoMVAPWoldDMwLT,          "_tauIsoMVAPWoldDMwLT[_nL]/D");
+    outputTree->Branch("_tauIsoMVAPWoldDMwLT",          &_tauIsoMVAPWoldDMwLT,          "_tauIsoMVAPWoldDMwLT[_nL]/D");*/
     outputTree->Branch("_relIso",                       &_relIso,                       "_relIso[_nLight]/D");
     outputTree->Branch("_relIso_80X",                   &_relIso_80X,                   "_relIso_80X[_nMu]/D"); // old, for backwards compatibility in lepton mva's
     outputTree->Branch("_relIso_Summer16",              &_relIso_Summer16,              "_relIso_Summer16[_nLight]/D"); // old, for backwards compatibility in lepton mva's
@@ -131,7 +131,7 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("_lEScaleDown",                &_lEScaleDown,                  "_lEScaleDown[_nLight]/D");
     outputTree->Branch("_lEResUp",                    &_lEResUp,                      "_lEResUp[_nLight]/D");
     outputTree->Branch("_lEResDown",                  &_lEResDown,                    "_lEResDown[_nLight]/D");
-    if(multilepAnalyzer->storeAllTauID){
+    if(multilepAnalyzer->storeAllTauID and false){
       outputTree->Branch("_decayModeFindingNew",          &_decayModeFindingNew,          "_decayModeFindingNew[_nL]/O");
       outputTree->Branch("_decayModeFindingDeepTau",          &_decayModeFindingDeepTau,          "_decayModeFindingDeepTau[_nL]/O");
       outputTree->Branch("_tauPOGVLoose2015",             &_tauPOGVLoose2015,             "_tauPOGVLoose2015[_nL]/O");
@@ -205,11 +205,11 @@ bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& prima
         if(mu.innerTrack().isNull())                   continue;
         if(mu.pt() < 5)                                continue;
         if(fabs(mu.eta()) > 2.4)                       continue;
-        if(!mu.isPFMuon())                             continue;
-        if(!(mu.isTrackerMuon() || mu.isGlobalMuon())) continue;
+//        if(!mu.isPFMuon())                             continue;
+//        if(!(mu.isTrackerMuon() || mu.isGlobalMuon())) continue;
         fillLeptonImpactParameters(mu);
-        if(fabs(_dxy[_nL]) > 0.05)                     continue;
-        if(fabs(_dz[_nL]) > 0.1)                       continue;
+//        if(fabs(_dxy[_nL]) > 0.05)                     continue;
+//        if(fabs(_dz[_nL]) > 0.1)                       continue;
         fillLeptonKinVars(mu);
         if( multilepAnalyzer->isMC() ) fillLeptonGenVars(mu, *genParticles);
 
@@ -269,6 +269,9 @@ bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& prima
         ++_nL;
         ++_nLight;
     }
+
+    // We stop here, only interested in the muons in this branch
+    return true;
 
     // Loop over electrons (note: using iterator we can easily get the ref too)
     for(auto ele = electrons->begin(); ele != electrons->end(); ++ele){

@@ -48,25 +48,27 @@ multilep::multilep(const edm::ParameterSet& iConfig):
     headerPart2(                                                               iConfig.getParameter<edm::FileInPath>("headerPart2").fullPath())
 {
     if( is2017() || is2018() ) ecalBadCalibFilterToken = consumes<bool>(edm::InputTag("ecalBadCalibReducedMINIAODFilter"));
-    triggerAnalyzer       = new TriggerAnalyzer(iConfig, this);
+//  triggerAnalyzer       = new TriggerAnalyzer(iConfig, this);
     leptonAnalyzer        = new LeptonAnalyzer(iConfig, this);
-    photonAnalyzer        = new PhotonAnalyzer(iConfig, this);
+/*  photonAnalyzer        = new PhotonAnalyzer(iConfig, this);
     jetAnalyzer           = new JetAnalyzer(iConfig, this);
     genAnalyzer           = new GenAnalyzer(iConfig, this);
     lheAnalyzer           = new LheAnalyzer(iConfig, this);
     susyMassAnalyzer      = new SUSYMassAnalyzer(iConfig, this, lheAnalyzer);
     particleLevelAnalyzer = new ParticleLevelAnalyzer(iConfig, this);
+*/
 }
 
 multilep::~multilep(){
-    delete triggerAnalyzer;
+//  delete triggerAnalyzer;
     delete leptonAnalyzer;
-    delete photonAnalyzer;
+/*  delete photonAnalyzer;
     delete jetAnalyzer;
     delete genAnalyzer;
     delete particleLevelAnalyzer;
     delete lheAnalyzer;
     delete susyMassAnalyzer;
+*/
 }
 
 // ------------ method called once each job just before starting event loop  ------------
@@ -83,7 +85,7 @@ void multilep::beginJob(){
     outputTree->Branch("_nVertex",                      &_nVertex,                      "_nVertex/i");
     outputTree->Branch("_is2017",                       &sampleIs2017,                  "_is2017/O");
     outputTree->Branch("_is2018",                       &sampleIs2018,                  "_is2018/O");
-
+/*
     if( isMC() && !is2018() ){
         outputTree->Branch("_prefireWeight",              &_prefireWeight,                "_prefireWeight/F");
         outputTree->Branch("_prefireWeightUp",            &_prefireWeightUp,              "_prefireWeightUp/F");
@@ -94,11 +96,11 @@ void multilep::beginJob(){
     if( isSUSY() )  susyMassAnalyzer->beginJob(outputTree, fs);
     if( isMC() ) genAnalyzer->beginJob(outputTree);
     if( isMC() && storeParticleLevel) particleLevelAnalyzer->beginJob(outputTree);
-    
-    triggerAnalyzer->beginJob(outputTree);
+*/
+//  triggerAnalyzer->beginJob(outputTree);
     leptonAnalyzer->beginJob(outputTree);
-    photonAnalyzer->beginJob(outputTree);
-    jetAnalyzer->beginJob(outputTree);
+//  photonAnalyzer->beginJob(outputTree);
+//  jetAnalyzer->beginJob(outputTree);
 
     _runNb = 0;
 
@@ -116,38 +118,38 @@ void multilep::beginLuminosityBlock(const edm::LuminosityBlock& iLumi, const edm
 //------------- method called for each run -------------
 void multilep::beginRun(const edm::Run& iRun, edm::EventSetup const& iSetup){
     _runNb = (unsigned long) iRun.id().run();
-    triggerAnalyzer->reIndex = true;                                   // HLT results could have different size/order in new run, so look up again the index positions
+//    triggerAnalyzer->reIndex = true;                                   // HLT results could have different size/order in new run, so look up again the index positions
 }
 
 // ------------ method called for each event  ------------
 void multilep::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     auto vertices = getHandle(iEvent, vtxToken);
-
+/*
     if( isMC() ) lheAnalyzer->analyze(iEvent);                                            // needs to be run before selection to get correct uncertainties on MC xsection
     if( isSUSY() ) susyMassAnalyzer->analyze(iEvent);                                        // needs to be run after LheAnalyzer, but before all other models
-
+*/
     _nVertex = vertices->size();
-    nVertices->Fill(_nVertex, lheAnalyzer->getWeight()); 
-
+//   nVertices->Fill(_nVertex, lheAnalyzer->getWeight()); 
+/*
     bool applySkim; //better not to shadow class variable with name! // Do not skim if event topology is available on particleLevel 
     if( isMC() && storeParticleLevel ) applySkim = !particleLevelAnalyzer->analyze(iEvent);
     else applySkim = true;
-
-    if(_nVertex == 0)                                                        return;          // Don't consider 0 vertex events
-    if(!leptonAnalyzer->analyze(iEvent, *(vertices->begin())) and applySkim) return;          // returns false if doesn't pass applySkim condition, so skip event in such case
-    if(!photonAnalyzer->analyze(iEvent) and applySkim)                       return;
-    if(!jetAnalyzer->analyze(iEvent) and applySkim)                          return;
-    if( isMC() ) genAnalyzer->analyze(iEvent);
-    triggerAnalyzer->analyze(iEvent);
+*/
+//  if(_nVertex == 0)                                                        return;          // Don't consider 0 vertex events
+    leptonAnalyzer->analyze(iEvent, *(vertices->begin()));
+//  if(!photonAnalyzer->analyze(iEvent) and applySkim)                       return;
+//  if(!jetAnalyzer->analyze(iEvent) and applySkim)                          return;
+//  if( isMC() ) genAnalyzer->analyze(iEvent);
+//  triggerAnalyzer->analyze(iEvent);
 
     _eventNb = (unsigned long) iEvent.id().event();
-
+/*
     if(isMC() and !is2018()){
      _prefireWeight = *(getHandle(iEvent, prefireWeightToken));
      _prefireWeightUp = *(getHandle(iEvent, prefireWeightUpToken));
      _prefireWeightDown = *(getHandle(iEvent, prefireWeightDownToken));
     }
-
+*/
     outputTree->Fill();                                                                  //store calculated event info in root tree
 }
 

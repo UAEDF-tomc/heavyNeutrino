@@ -4,9 +4,11 @@ In order to have a working copy, following the instructions below which sets up 
 The tuplizer itself is entirely contained in the multilep directory.
 **Please take a moment to read the [wiki](https://github.com/GhentAnalysis/heavyNeutrino/wiki) with useful guidelines**
 
-# Set-up instructions (master branch)
+**Warning: this is a quickly adapted branch in order to get a small muon tuple, for variables which have to be mixed in with the Muon POG AOD tuples**
+
+# Set-up instructions (muonTuple branch)
 ```
-wget https://raw.githubusercontent.com/GhentAnalysis/heavyNeutrino/master/setup.sh
+wget https://raw.githubusercontent.com/GhentAnalysis/heavyNeutrino/muonTuple/setup.sh
 source setup.sh
 ```
 
