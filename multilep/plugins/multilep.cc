@@ -135,7 +135,7 @@ void multilep::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
     if( isMC() && storeParticleLevel ) applySkim = !particleLevelAnalyzer->analyze(iEvent);
     else applySkim = true;
 */
-//  if(_nVertex == 0)                                                        return;          // Don't consider 0 vertex events
+    if(_nVertex == 0)                                                        return;          // Don't consider 0 vertex events
     leptonAnalyzer->analyze(iEvent, *(vertices->begin()));
 //  if(!photonAnalyzer->analyze(iEvent) and applySkim)                       return;
 //  if(!jetAnalyzer->analyze(iEvent) and applySkim)                          return;

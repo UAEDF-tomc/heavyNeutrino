@@ -34,12 +34,9 @@ LeptonAnalyzer::~LeptonAnalyzer(){
 void LeptonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("_nL",                           &_nL,                           "_nL/i");
     outputTree->Branch("_nMu",                          &_nMu,                          "_nMu/i");
-    outputTree->Branch("_nEle",                         &_nEle,                         "_nEle/i");
     outputTree->Branch("_nLight",                       &_nLight,                       "_nLight/i");
-    outputTree->Branch("_nTau",                         &_nTau,                         "_nTau/i");
     outputTree->Branch("_lPt",                          &_lPt,                          "_lPt[_nL]/D");
     outputTree->Branch("_lEta",                         &_lEta,                         "_lEta[_nL]/D");
-    outputTree->Branch("_lEtaSC",                       &_lEtaSC,                       "_lEtaSC[_nLight]/D");
     outputTree->Branch("_lPhi",                         &_lPhi,                         "_lPhi[_nL]/D");
     outputTree->Branch("_lE",                           &_lE,                           "_lE[_nL]/D");
     outputTree->Branch("_lFlavor",                      &_lFlavor,                      "_lFlavor[_nL]/i");
@@ -86,15 +83,12 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("_tauIsoMVAPWoldDMwLT",          &_tauIsoMVAPWoldDMwLT,          "_tauIsoMVAPWoldDMwLT[_nL]/D");*/
     outputTree->Branch("_relIso",                       &_relIso,                       "_relIso[_nLight]/D");
     outputTree->Branch("_relIso_80X",                   &_relIso_80X,                   "_relIso_80X[_nMu]/D"); // old, for backwards compatibility in lepton mva's
-    outputTree->Branch("_relIso_Summer16",              &_relIso_Summer16,              "_relIso_Summer16[_nLight]/D"); // old, for backwards compatibility in lepton mva's
     outputTree->Branch("_relIsoDeltaBeta",              &_relIsoDeltaBeta,              "_relIsoDeltaBeta[_nMu]/D");
     outputTree->Branch("_relIso0p4",                    &_relIso0p4,                    "_relIso0p4[_nLight]/D");
-    outputTree->Branch("_relIso0p4_Summer16",           &_relIso0p4_Summer16,           "_relIso0p4_Summer16[_nLight]/D"); // old, for backwards compatibility in lepton mva's
     outputTree->Branch("_relIso0p4MuDeltaBeta",         &_relIso0p4MuDeltaBeta,         "_relIso0p4MuDeltaBeta[_nMu]/D");
     outputTree->Branch("_miniIso",                      &_miniIso,                      "_miniIso[_nLight]/D");
     outputTree->Branch("_miniIsoCharged",               &_miniIsoCharged,               "_miniIsoCharged[_nLight]/D");
     outputTree->Branch("_miniIso_80X",                  &_miniIso_80X,                  "_miniIso_80X[_nMu]/D"); // old, for backwards compatibility in lepton mva's
-    outputTree->Branch("_miniIso_Spring15",             &_miniIso_Spring15,             "_miniIso_Spring15[_nLight]/D"); // old, for backwards compatibility in lepton mva's
     outputTree->Branch("_ptRel",                        &_ptRel,                        "_ptRel[_nLight]/D");
     outputTree->Branch("_ptRatio",                      &_ptRatio,                      "_ptRatio[_nLight]/D");
     outputTree->Branch("_closestJetCsvV2",              &_closestJetCsvV2,              "_closestJetCsvV2[_nLight]/D");
@@ -109,18 +103,6 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("_lMuonSegComp",                 &_lMuonSegComp,                 "_lMuonSegComp[_nMu]/D");
     outputTree->Branch("_lMuonTrackPt",                 &_lMuonTrackPt,                 "_lMuonTrackPt[_nMu]/D");
     outputTree->Branch("_lMuonTrackPtErr",              &_lMuonTrackPtErr,              "_lMuonTrackPtErr[_nMu]/D");
-    if( multilepAnalyzer->isMC() ){
-        outputTree->Branch("_lIsPrompt",                  &_lIsPrompt,                    "_lIsPrompt[_nL]/O");
-        outputTree->Branch("_lMatchPdgId",                &_lMatchPdgId,                  "_lMatchPdgId[_nL]/I");
-        outputTree->Branch("_lMatchCharge",               &_lMatchCharge,                 "_lMatchCharge[_nLight]/I");
-        outputTree->Branch("_lMatchPt",                   &_lMatchPt,                     "_lMatchPt[_nLight]/D");
-        outputTree->Branch("_lHasMatch",                  &_lHasMatch,                    "_lHasMatch[_nLight]/O");
-        outputTree->Branch("_tauGenStatus",               &_tauGenStatus,                 "_tauGenStatus[_nL]/i");
-        outputTree->Branch("_lMomPdgId",                  &_lMomPdgId,                    "_lMomPdgId[_nL]/I");
-        outputTree->Branch("_lProvenance",                &_lProvenance,                  "_lProvenance[_nL]/i");
-        outputTree->Branch("_lProvenanceCompressed",      &_lProvenanceCompressed,        "_lProvenanceCompressed[_nL]/i");
-        outputTree->Branch("_lProvenanceConversion",      &_lProvenanceConversion,        "_lProvenanceConversion[_nL]/i");
-    }
     outputTree->Branch("_lPtCorr",                    &_lPtCorr,                      "_lPtCorr[_nLight]/D");
     outputTree->Branch("_lPtScaleUp",                 &_lPtScaleUp,                   "_lPtScaleUp[_nLight]/D");
     outputTree->Branch("_lPtScaleDown",               &_lPtScaleDown,                 "_lPtScaleDown[_nLight]/D");
@@ -131,55 +113,6 @@ void LeptonAnalyzer::beginJob(TTree* outputTree){
     outputTree->Branch("_lEScaleDown",                &_lEScaleDown,                  "_lEScaleDown[_nLight]/D");
     outputTree->Branch("_lEResUp",                    &_lEResUp,                      "_lEResUp[_nLight]/D");
     outputTree->Branch("_lEResDown",                  &_lEResDown,                    "_lEResDown[_nLight]/D");
-    if(multilepAnalyzer->storeAllTauID and false){
-      outputTree->Branch("_decayModeFindingNew",          &_decayModeFindingNew,          "_decayModeFindingNew[_nL]/O");
-      outputTree->Branch("_decayModeFindingDeepTau",          &_decayModeFindingDeepTau,          "_decayModeFindingDeepTau[_nL]/O");
-      outputTree->Branch("_tauPOGVLoose2015",             &_tauPOGVLoose2015,             "_tauPOGVLoose2015[_nL]/O");
-      outputTree->Branch("_tauPOGLoose2015",              &_tauPOGLoose2015,              "_tauPOGLoose2015[_nL]/O");
-      outputTree->Branch("_tauPOGMedium2015",             &_tauPOGMedium2015,             "_tauPOGMedium2015[_nL]/O");
-      outputTree->Branch("_tauPOGTight2015",              &_tauPOGTight2015,              "_tauPOGTight2015[_nL]/O");
-      outputTree->Branch("_tauPOGVTight2015",             &_tauPOGVTight2015,             "_tauPOGVTight2015[_nL]/O");
-      outputTree->Branch("_tauVLooseMvaNew2015",          &_tauVLooseMvaNew2015,          "_tauVLooseMvaNew2015[_nL]/O");
-      outputTree->Branch("_tauLooseMvaNew2015",           &_tauLooseMvaNew2015,           "_tauLooseMvaNew2015[_nL]/O");
-      outputTree->Branch("_tauMediumMvaNew2015",          &_tauMediumMvaNew2015,          "_tauMediumMvaNew2015[_nL]/O");
-      outputTree->Branch("_tauTightMvaNew2015",           &_tauTightMvaNew2015,           "_tauTightMvaNew2015[_nL]/O");
-      outputTree->Branch("_tauVTightMvaNew2015",          &_tauVTightMvaNew2015,          "_tauVTightMvaNew2015[_nL]/O");
-      outputTree->Branch("_tauPOGVVLoose2017v2",          &_tauPOGVVLoose2017v2,          "_tauPOGVVLoose2017v2[_nL]/O");
-      outputTree->Branch("_tauPOGVVTight2017v2",          &_tauPOGVVTight2017v2,          "_tauPOGVVTight2017v2[_nL]/O");
-      outputTree->Branch("_tauVLooseMvaNew2017v2",        &_tauVLooseMvaNew2017v2,        "_tauVLooseMvaNew2017v2[_nL]/O");
-      outputTree->Branch("_tauLooseMvaNew2017v2",         &_tauLooseMvaNew2017v2,         "_tauLooseMvaNew2017v2[_nL]/O");
-      outputTree->Branch("_tauMediumMvaNew2017v2",        &_tauMediumMvaNew2017v2,        "_tauMediumMvaNew2017v2[_nL]/O");
-      outputTree->Branch("_tauTightMvaNew2017v2",         &_tauTightMvaNew2017v2,         "_tauTightMvaNew2017v2[_nL]/O");
-      outputTree->Branch("_tauVTightMvaNew2017v2",        &_tauVTightMvaNew2017v2,        "_tauVTightMvaNew2017v2[_nL]/O");
-      outputTree->Branch("_tauDeepTauVsJetsRaw",          &_tauDeepTauVsJetsRaw,          "_tauDeepTauVsJetsRaw[_nL]/O");
-      outputTree->Branch("_tauVVVLooseDeepTauVsJets",      &_tauVVVLooseDeepTauVsJets,      "_tauVVVLooseDeepTauVsJets[_nL]/O");
-      outputTree->Branch("_tauVVLooseDeepTauVsJets",      &_tauVVLooseDeepTauVsJets,      "_tauVVLooseDeepTauVsJets[_nL]/O");
-      outputTree->Branch("_tauVLooseDeepTauVsJets",       &_tauVLooseDeepTauVsJets,       "_tauVLooseDeepTauVsJets[_nL]/O");
-      outputTree->Branch("_tauLooseDeepTauVsJets",        &_tauLooseDeepTauVsJets,        "_tauLooseDeepTauVsJets[_nL]/O");
-      outputTree->Branch("_tauMediumDeepTauVsJets",       &_tauMediumDeepTauVsJets,       "_tauMediumDeepTauVsJets[_nL]/O");
-      outputTree->Branch("_tauTightDeepTauVsJets",        &_tauTightDeepTauVsJets,        "_tauTightDeepTauVsJets[_nL]/O");
-      outputTree->Branch("_tauVTightDeepTauVsJets",       &_tauVTightDeepTauVsJets,       "_tauVTightDeepTauVsJets[_nL]/O");
-      outputTree->Branch("_tauVVTightDeepTauVsJets",      &_tauVVTightDeepTauVsJets,      "_tauVVTightDeepTauVsJets[_nL]/O");
-      outputTree->Branch("_tauDeepTauVsEleRaw",           &_tauDeepTauVsEleRaw,           "_tauDeepTauVsEleRaw[_nL]/O");
-      outputTree->Branch("_tauVVVLooseDeepTauVsEle",       &_tauVVVLooseDeepTauVsEle,       "_tauVVVLooseDeepTauVsEle[_nL]/O");
-      outputTree->Branch("_tauVVLooseDeepTauVsEle",       &_tauVVLooseDeepTauVsEle,       "_tauVVLooseDeepTauVsEle[_nL]/O");
-      outputTree->Branch("_tauVLooseDeepTauVsEle",        &_tauVLooseDeepTauVsEle,        "_tauVLooseDeepTauVsEle[_nL]/O");
-      outputTree->Branch("_tauLooseDeepTauVsEle",         &_tauLooseDeepTauVsEle,         "_tauLooseDeepTauVsEle[_nL]/O");
-      outputTree->Branch("_tauMediumDeepTauVsEle",        &_tauMediumDeepTauVsEle,        "_tauMediumDeepTauVsEle[_nL]/O");
-      outputTree->Branch("_tauTightDeepTauVsEle",         &_tauTightDeepTauVsEle,         "_tauTightDeepTauVsEle[_nL]/O");
-      outputTree->Branch("_tauVTightDeepTauVsEle",        &_tauVTightDeepTauVsEle,        "_tauVTightDeepTauVsEle[_nL]/O");
-      outputTree->Branch("_tauVVTightDeepTauVsEle",       &_tauVVTightDeepTauVsEle,       "_tauVVTightDeepTauVsEle[_nL]/O");
-      outputTree->Branch("_tauDeepTauMuRaw",              &_tauDeepTauVsMuRaw,            "_tauDeepTauVsEleMu[_nL]/O");
-      outputTree->Branch("_tauVLooseDeepTauVsMu",         &_tauVLooseDeepTauVsMu,         "_tauVLooseDeepTauVsMu[_nL]/O");
-      outputTree->Branch("_tauLooseDeepTauVsMu",          &_tauLooseDeepTauVsMu,          "_tauLooseDeepTauVsMu[_nL]/O");
-      outputTree->Branch("_tauMediumDeepTauVsMu",         &_tauMediumDeepTauVsMu,         "_tauMediumDeepTauVsMu[_nL]/O");
-      outputTree->Branch("_tauTightDeepTauVsMu",          &_tauTightDeepTauVsMu,          "_tauTightDeepTauVsMu[_nL]/O");
-      outputTree->Branch("_tauMuonVetoTight",             &_tauMuonVetoTight,             "_tauMuonVetoTight[_nL]/O");
-      outputTree->Branch("_tauEleVetoVLoose",             &_tauEleVetoVLoose,             "_tauEleVetoVLoose[_nL]/O");
-      outputTree->Branch("_tauEleVetoMedium",             &_tauEleVetoMedium,             "_tauEleVetoMedium[_nL]/O");
-      outputTree->Branch("_tauEleVetoTight",              &_tauEleVetoTight,              "_tauEleVetoTight[_nL]/O");
-      outputTree->Branch("_tauEleVetoVTight",             &_tauEleVetoVTight,             "_tauEleVetoVTight[_nL]/O");
-     }
 }
 
 bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& primaryVertex){
@@ -202,12 +135,12 @@ bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& prima
     // muons need to be run first, because some ID's need to calculate a muon veto for electrons
     for(const pat::Muon& mu : *muons){
         if(_nL == nL_max)                              break;
-        if(mu.innerTrack().isNull())                   continue;
         if(mu.pt() < 5)                                continue;
         if(fabs(mu.eta()) > 2.4)                       continue;
 //        if(!mu.isPFMuon())                             continue;
 //        if(!(mu.isTrackerMuon() || mu.isGlobalMuon())) continue;
         fillLeptonImpactParameters(mu);
+        std::cout << _dz[_nL] << std::endl;
 //        if(fabs(_dxy[_nL]) > 0.05)                     continue;
 //        if(fabs(_dz[_nL]) > 0.1)                       continue;
         fillLeptonKinVars(mu);
@@ -215,8 +148,8 @@ bool LeptonAnalyzer::analyze(const edm::Event& iEvent, const reco::Vertex& prima
 
         _lFlavor[_nL]        = 1;
         _lMuonSegComp[_nL]    = mu.segmentCompatibility();
-        _lMuonTrackPt[_nL]    = mu.innerTrack()->pt();
-        _lMuonTrackPtErr[_nL] = mu.innerTrack()->ptError();
+//        _lMuonTrackPt[_nL]    = mu.innerTrack()->pt();
+//        _lMuonTrackPtErr[_nL] = mu.innerTrack()->ptError();
 
         _relIso[_nL]               = getRelIso03(mu, *rho, muonsEffectiveAreas, false);                     // Isolation variables
         _relIso_80X[_nL]           = getRelIso03(mu, *rho, muonsEffectiveAreas_80X, false);
