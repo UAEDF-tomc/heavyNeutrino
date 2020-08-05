@@ -54,17 +54,18 @@ samplesToMix.append(('/pnfs/iihe/cms/store/user/tomc/tnpTuples_muons/POG/TnPTree
     '/pnfs/iihe/cms/store/user/tomc/heavyNeutrino/SingleMuon/crab_Run2018D-22Jan2019-v2_muonTuples/200718*/*/*.root'))
 
 
-totalJobs = 10
 if not args.isChild:
   from ttg.tools.jobSubmitter import submitJobs
   jobs = []
   for i in (range(len(samplesToMix)) if not args.jobId else [args.jobId]):
+    totalJobs = (100 if 'Run2018D' in samplesToMix[i][0] else 10)
     for j in (range(totalJobs) if not args.subJob else [args.subJob]):
       jobs.append((str(i),str(j)))
   submitJobs(__file__, ('jobId', 'subJob'), jobs, argParser, jobLabel="TP", wallTime='168')
   exit(0)
 
 
+totalJobs = (100 if 'Run2018D' in samplesToMix[int(args.jobId)][0] else 10)
 
 #
 # Mixing function
@@ -72,13 +73,14 @@ if not args.isChild:
 def mix(input, subJob):
   log.info('Mixing %s with %s' % input)
   inputPOG, inputGhent = input
-  output = inputPOG.replace('POG', 'updated4')
+  output = inputPOG.replace('POG', 'updated7')
 
   treeGhent  = ROOT.TChain('blackJackAndHookers/blackJackAndHookersTree')
   for path in glob.glob(inputGhent):
     treeGhent.Add(path)
 
-  treeGhent.BuildIndex('_eventNb');
+  # You need to build with both run and event number, as apparently sometimes you have the same event number in different runs?
+  treeGhent.BuildIndex('_runNb', '_eventNb');
 
   inputFile  = ROOT.TFile(inputPOG)
   treePOG    = inputFile.Get('tpTree/fitter_tree')
@@ -87,12 +89,12 @@ def mix(input, subJob):
   outputFile.mkdir('tpTree')
   outputFile.cd('tpTree')
 
-  keepBranches = ['pt', 'eta', 'phi', 'pair_probeMultiplicity', 'pair_dz', 'pair_nJets30',
+  keepBranches = ['pt', 'mt', 'eta', 'phi', 'pair_probeMultiplicity', 'pair_dz', 'pair_nJets30',
                   'tag_pt', 'tag_abseta', 'tag_IsoMu24', 'tag_combRelIsoPF04dBeta', 'tag_dxyPVdzmin', 'tag_dzPV', 'tag_nVertices',
                   'lumi', 'run', 'event',
                   'abseta', 'mass', 'mcMass', 'Medium', 'charge',
                   'combRelIsoPF03', 'combRelIsoPF03dBeta', 'combRelIsoPF04', 'combRelIsoPF04dBeta',
-                  'PF', 'Glb', 'TM'
+                  'PF', 'Glb', 'TM', 'dxyPVdzmin', 'dzPV',
                   ]
                                        
 
@@ -111,7 +113,18 @@ def mix(input, subJob):
     treePOG.GetEntry(i)
     if treePOG.pt < 10: continue
     if abs(treePOG.eta) > 2.4: continue
-    treeGhent.GetEntryWithIndex(treePOG.event)
+
+# do not expect this will give you the correct event (but often is does, sometimes it doesn't), do not expect ROOT will tell you that it is doing garbage here
+# thank you ROOT developers for wasting again a lot of my precious time
+#   treeGhent.GetEntryWithIndex(treePOG.event) 
+# but ROOT is reasonably close in event number, so let's try to find it in the next events if it does not match
+    indexNumber = treeGhent.GetEntryNumberWithIndex(treePOG.run, treePOG.event)
+    treeGhent.GetEntry(indexNumber)
+
+    while treeGhent._eventNb != treePOG.event:
+      indexNumber += 1
+      treeGhent.GetEntry(indexNumber)
+
     for j in range(treeGhent._nMu):
       if(abs(treeGhent._lPt[j]-treePOG.pt) > 0.1): continue
       if(abs(treeGhent._lEta[j]-treePOG.eta) > 0.1): continue
@@ -127,8 +140,21 @@ def mix(input, subJob):
       newVars.dxy          = 0 
       newVars.dz           = 0 
       newVars.SIP3D        = 0 
-      newVars.miniIso      = 0 
+      newVars.miniIso      = 0
       outputTree.Fill()
+      # this should never happen, as we should have all PF muons in miniAOD
+      # nevertheless, you will still a few rare cases where the match didn't work because the pt between AOD and miniAOD is just too different
+      # I guess it's better to let these few cases out, they are to little to matter anyway
+      # If you see, however, below message way too often, then maybe the run/event matching is broken
+      if treePOG.PF:
+        log.warning('Found a PF muon in POG trees which is not in Ghent trees')
+        log.info('Run:   %s %s' % (str(treePOG.run), str(treeGhent._runNb)))
+        log.info('Lumi:  %s %s' % (str(treePOG.lumi), str(treeGhent._lumiBlock)))
+        log.info('Event: %s %s' % (str(treePOG.event), str(treeGhent._eventNb)))
+        log.info('  need:  %s %s' % (str(treePOG.pt), str(treePOG.eta)))
+        for j in range(treeGhent._nMu):
+          log.info('  found: %s %s' % (str(treeGhent._lPt[j]), str(treeGhent._lEta[j])))
+
   outputTree.Write()
   outputFile.Close()
   inputFile.Close()
