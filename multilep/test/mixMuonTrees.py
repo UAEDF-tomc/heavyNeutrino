@@ -75,6 +75,11 @@ def mix(input, subJob):
   inputPOG, inputGhent = input
   output = inputPOG.replace('POG', 'updated7')
 
+  if os.path.exists(output.replace('.root', '_%s.root' % subJob)):
+    log.info('Finished - output already exists')
+    return
+
+
   treeGhent  = ROOT.TChain('blackJackAndHookers/blackJackAndHookersTree')
   for path in glob.glob(inputGhent):
     treeGhent.Add(path)
